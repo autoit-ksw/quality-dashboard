@@ -646,7 +646,11 @@ function initFirebase() {
         dbRef = db.ref('quality-dashboard');
         dbRef.child('projects').on('value', snap => {
           const data = snap.val();
-          if (data) { projects = Object.values(data); render(); }
+          if (data) {
+            const vals = Object.values(data);
+            projects = vals.filter(p => p && typeof p === 'object' && p.id && p.type);
+          }
+          render();
         });
         fbConnected = true;
         const bar = document.getElementById('fbBar');
