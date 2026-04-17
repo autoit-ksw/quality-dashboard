@@ -273,11 +273,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 }
 
 /* MODAL */
-.modal-bg {
-  position: fixed; inset: 0; background: rgba(0,0,0,.6);
-  display: none; align-items: center; justify-content: center; z-index: 200;
-}
-.modal-bg.open { display: flex; }
+.modal-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; z-index: 99999; }
+.modal-bg.open { display: flex !important; }
 .modal {
   background: var(--bg2); border: 1px solid var(--border2); border-radius: 14px;
   padding: 24px; width: min(460px, 90vw); max-height: 85vh; overflow-y: auto;
@@ -599,8 +596,8 @@ function navigate(el, page) {
   el.classList.add('active');
 }
 
-function openAddModal() { document.getElementById('addModal').classList.add('open'); }
-function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
+function openAddModal() { const m = document.getElementById('addModal'); m.classList.add('open'); m.style.display='flex'; }
+function closeAddModal() { const m = document.getElementById('addModal'); m.classList.remove('open'); m.style.display='none'; }
 
 function saveProject() {
   const name = document.getElementById('f-name').value.trim();
@@ -623,8 +620,8 @@ function saveProject() {
   render();
 }
 
-function openFbModal() { document.getElementById('fbModal').classList.add('open'); }
-function closeFbModal() { document.getElementById('fbModal').classList.remove('open'); }
+function openFbModal() { const m = document.getElementById('fbModal'); m.classList.add('open'); m.style.display='flex'; }
+function closeFbModal() { const m = document.getElementById('fbModal'); m.classList.remove('open'); m.style.display='none'; }
 
 const FB_CONFIG = {
   apiKey: 'AIzaSyCWEGzctMIcbgQwil4ZdCanZxZybHHrFu4',
