@@ -626,13 +626,14 @@ function saveProject() {
 function openFbModal() { document.getElementById('fbModal').classList.add('open'); }
 function closeFbModal() { document.getElementById('fbModal').classList.remove('open'); }
 
-function connectFirebase() {
-  const apiKey = document.getElementById('fb-apiKey').value.trim();
-  const dbUrl = document.getElementById('fb-dbUrl').value.trim();
-  const projectId = document.getElementById('fb-projectId').value.trim();
-  const appId = document.getElementById('fb-appId').value.trim();
-  if (!apiKey || !dbUrl || !projectId) { alert('API Key, Database URL, Project ID는 필수입니다'); return; }
+const FB_CONFIG = {
+  apiKey: 'AIzaSyCWEGzctMIcbgQwil4ZdCanZxZybHHrFu4',
+  databaseURL: 'https://qualitydash01-6a6ac-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'qualitydash01-6a6ac',
+  appId: '1:282750403382:web:b6341635ab0b186fcc2997'
+};
 
+function initFirebase() {
   const script1 = document.createElement('script');
   script1.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
   script1.onload = () => {
@@ -640,31 +641,31 @@ function connectFirebase() {
     script2.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js';
     script2.onload = () => {
       try {
-        const app = firebase.initializeApp({ apiKey, databaseURL: dbUrl, projectId, appId });
+        firebase.initializeApp(FB_CONFIG);
         const db = firebase.database();
         dbRef = db.ref('quality-dashboard');
         dbRef.child('projects').on('value', snap => {
           const data = snap.val();
-          if (data) {
-            projects = Object.values(data);
-            render();
-          }
+          if (data) { projects = Object.values(data); render(); }
         });
         fbConnected = true;
-        document.getElementById('fbBar').style.background = 'rgba(63,185,80,.08)';
-        document.getElementById('fbBar').style.borderColor = 'rgba(63,185,80,.2)';
-        document.getElementById('fbBar').style.color = 'var(--green)';
+        const bar = document.getElementById('fbBar');
+        bar.style.background = 'rgba(63,185,80,.08)';
+        bar.style.borderColor = 'rgba(63,185,80,.2)';
+        bar.style.color = 'var(--green)';
         document.getElementById('fbStatus').textContent = 'Firebase 연결됨 — 실시간 팀 공유 활성화';
-        closeFbModal();
-        dbRef.child('projects').set(Object.fromEntries(projects.map(p => [p.id, p])));
-      } catch(e) { alert('Firebase 연결 실패: ' + e.message); }
+        document.querySelector('.setup-btn').style.display = 'none';
+      } catch(e) { console.error('Firebase 연결 실패:', e); }
     };
     document.head.appendChild(script2);
   };
   document.head.appendChild(script1);
 }
 
+function connectFirebase() { closeFbModal(); }
+
 render();
+initFirebase();
 </script>
 </body>
 </html>
