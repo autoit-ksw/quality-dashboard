@@ -352,7 +352,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
   <!-- 체크리스트 -->
   <div class="page" id="page-checklist">
     <div class="card" style="margin-bottom:0">
-      <div class="card-header"><div class="card-title">체크리스트 템플릿</div></div>
+      <div class="card-header"><div class="card-title">체크리스트 템플릿</div>
+        <div style="font-size:11px;color:var(--text3)">각 항목에 참고 문서 링크를 첨부할 수 있어요</div>
+      </div>
     </div>
     <div class="cl-grid" id="clGrid"></div>
   </div>
@@ -360,15 +362,49 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
   <!-- BOM / 자료실 -->
   <div class="page" id="page-bom">
     <div class="card">
-      <div class="card-header"><div class="card-title">BOM / 자료실</div></div>
-      <div style="padding:18px">
-        <div style="font-size:12px;color:var(--text3);margin-bottom:14px">표준 품질 양식 및 BOM 자료 링크를 관리합니다.</div>
+      <div class="card-header">
+        <div class="card-title">BOM / 자료실</div>
+        <button class="add-btn" onclick="toggleBomForm()">+ 자료 추가</button>
+      </div>
+      <div class="add-form" id="bomForm">
+        <div style="display:grid;grid-template-columns:auto 2fr 2fr auto;gap:10px;align-items:end;padding:4px 0">
+          <div class="fg"><label>아이콘</label><select id="bom-icon" style="background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:13px;padding:7px 9px;font-family:var(--font-b)"><option>📋</option><option>📊</option><option>📝</option><option>🔍</option><option>📦</option><option>⚙️</option><option>📁</option><option>🗂️</option><option>📌</option></select></div>
+          <div class="fg"><label>자료명</label><input id="bom-name" placeholder="예: 수입검사 성적서"></div>
+          <div class="fg"><label>Google Drive URL</label><input id="bom-url" placeholder="https://drive.google.com/..."></div>
+          <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveBomItem()">추가</button><button class="cancel-btn" onclick="toggleBomForm()">취소</button></div></div>
+        </div>
+      </div>
+      <div style="padding:14px 18px">
         <div class="bom-grid" id="bomGrid"></div>
       </div>
     </div>
   </div>
 
 </main>
+
+<!-- 체크리스트 파일 첨부 폼 -->
+<div id="clFileForm" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:20px;z-index:999;min-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
+  <div style="font-size:14px;font-weight:500;margin-bottom:14px;color:var(--text)">참고 문서 링크 첨부</div>
+  <div style="margin-bottom:10px"><div style="font-size:10px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">파일명</div>
+  <input id="clf-name" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+  <div style="margin-bottom:14px"><div style="font-size:10px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Google Drive URL</div>
+  <input id="clf-url" placeholder="https://drive.google.com/..." style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+  <div style="font-size:10px;color:var(--text3);margin-bottom:14px">💡 Drive → 파일 우클릭 → 공유 → 링크 복사</div>
+  <div style="display:flex;justify-content:flex-end;gap:8px"><button class="cancel-btn" onclick="closeClFile()">취소</button><button class="save-btn" onclick="saveClFile()">첨부</button></div>
+</div>
+<div id="clFileOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998" onclick="closeClFile()"></div>
+
+<!-- BOM 링크 폼 -->
+<div id="bomLinkForm" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:20px;z-index:999;min-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
+  <div style="font-size:14px;font-weight:500;margin-bottom:14px;color:var(--text)">Google Drive 링크 연결</div>
+  <div style="margin-bottom:10px"><div style="font-size:10px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">자료명</div>
+  <input id="bom-link-name" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none" readonly></div>
+  <div style="margin-bottom:14px"><div style="font-size:10px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Google Drive URL</div>
+  <input id="bom-link-url" placeholder="https://drive.google.com/..." style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+  <div style="font-size:10px;color:var(--text3);margin-bottom:14px">💡 Drive → 파일 우클릭 → 공유 → 링크 복사</div>
+  <div style="display:flex;justify-content:flex-end;gap:8px"><button class="cancel-btn" onclick="closeBomLink()">취소</button><button class="save-btn" onclick="saveBomLink()">저장</button></div>
+</div>
+<div id="bomLinkOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998" onclick="closeBomLink()"></div>
 
 <script>
 const CHECKLISTS = {
@@ -398,7 +434,16 @@ const BOM_ITEMS=[
   {icon:'⚙️',name:'Redmine 이슈 가이드',sub:'이슈 등록/관리 절차'}
 ];
 
-let projects=[], issues=[], asItems=[], filter='all', filter2='all', expandedId=null, dbRef=null;
+let projects=[], issues=[], asItems=[], bomItems=[], clFiles={}, filter='all', filter2='all', expandedId=null, dbRef=null;
+// BOM 기본 항목
+const DEFAULT_BOM=[
+  {id:'b1',icon:'📋',name:'수입검사 성적서',sub:'AMC-HC20N 외 표준 양식',url:''},
+  {id:'b2',icon:'📊',name:'BOM 명세서 템플릿',sub:'HDS/RV3K 시리즈',url:''},
+  {id:'b3',icon:'📝',name:'4M 변경 관리 양식',sub:'AIS-825 기준',url:''},
+  {id:'b4',icon:'🔍',name:'품질 검사 기준서',sub:'제품별 검사 기준',url:''},
+  {id:'b5',icon:'📦',name:'납품 성적서',sub:'고객사별 표준 양식',url:''},
+  {id:'b6',icon:'⚙️',name:'Redmine 이슈 가이드',sub:'이슈 등록/관리 절차',url:''}
+];
 
 // DATE
 const d=new Date(), days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
@@ -612,17 +657,109 @@ function renderChecklist(){
   document.getElementById('clGrid').innerHTML=Object.entries(CHECKLISTS).map(([type,items])=>`
     <div class="cl-card">
       <div class="cl-type">${type}</div>
-      ${items.map((item,i)=>`<div class="cl-item"><span class="cl-num">${String(i+1).padStart(2,'0')}</span><span>${item}</span></div>`).join('')}
+      ${items.map((item,i)=>{
+        const key=type+'_'+i;
+        const f=clFiles[key];
+        return `<div class="cl-item" style="flex-direction:column;align-items:flex-start;gap:3px;padding:6px 0">
+          <div style="display:flex;align-items:center;gap:6px;width:100%">
+            <span class="cl-num">${String(i+1).padStart(2,'0')}</span>
+            <span style="flex:1">${item}</span>
+            <button class="act-btn edit" style="font-size:9px;padding:2px 6px;flex-shrink:0" onclick="openClFile('${key}','${item}')">📎</button>
+          </div>
+          ${f?`<div style="padding-left:26px"><a href="${f.url}" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none">📄 ${f.name}</a>
+            <button class="act-btn del" style="font-size:9px;padding:1px 5px;margin-left:4px" onclick="removeClFile('${key}')">✕</button></div>`:''}
+        </div>`;
+      }).join('')}
     </div>`).join('');
 }
+function openClFile(key,itemName){
+  currentClKey=key;
+  document.getElementById('clf-name').value=itemName+' 참고문서';
+  document.getElementById('clf-url').value='';
+  document.getElementById('clFileForm').style.display='block';
+  document.getElementById('clFileOverlay').style.display='block';
+}
+function closeClFile(){
+  document.getElementById('clFileForm').style.display='none';
+  document.getElementById('clFileOverlay').style.display='none';
+  currentClKey=null;
+}
+function saveClFile(){
+  const name=document.getElementById('clf-name').value.trim();
+  const url=document.getElementById('clf-url').value.trim();
+  if(!name||!url){alert('파일명과 URL을 입력해주세요');return;}
+  clFiles[currentClKey]={name,url};
+  if(dbRef)dbRef.child('clFiles/'+currentClKey).set({name,url});
+  closeClFile();
+  renderChecklist();
+}
+function removeClFile(key){
+  delete clFiles[key];
+  if(dbRef)dbRef.child('clFiles/'+key).remove();
+  renderChecklist();
+}
+let currentClKey=null;
 
 // BOM
 function renderBom(){
-  document.getElementById('bomGrid').innerHTML=BOM_ITEMS.map(b=>`
-    <div class="bom-item">
+  const items=bomItems.length?bomItems:DEFAULT_BOM;
+  document.getElementById('bomGrid').innerHTML=items.map((b,i)=>`
+    <div class="bom-item" ${b.url?`onclick="window.open('${b.url}','_blank')" style="cursor:pointer"`:''}> 
       <span class="bom-icon">${b.icon}</span>
-      <div><div class="bom-name">${b.name}</div><div class="bom-sub">${b.sub}</div></div>
+      <div style="flex:1"><div class="bom-name">${b.name}</div><div class="bom-sub">${b.url?'🔗 링크 연결됨':'링크 없음'}</div></div>
+      <div style="display:flex;gap:4px">
+        <button class="act-btn edit" style="font-size:10px;padding:3px 8px" onclick="openBomLink('${b.id||'b'+i}',event)">링크</button>
+        ${b.id&&!b.id.startsWith('b')?`<button class="act-btn del" style="font-size:10px;padding:3px 8px" onclick="deleteBomItem('${b.id}',event)">삭제</button>`:''}
+      </div>
     </div>`).join('');
+}
+function toggleBomForm(){document.getElementById('bomForm').classList.toggle('open');}
+function saveBomItem(){
+  const name=document.getElementById('bom-name').value.trim();
+  const url=document.getElementById('bom-url').value.trim();
+  if(!name){alert('자료명을 입력해주세요');return;}
+  const b={id:'bom'+Date.now(),icon:document.getElementById('bom-icon').value,name,sub:'',url};
+  bomItems.push(b);
+  if(dbRef)dbRef.child('bom/'+b.id).set(b);
+  document.getElementById('bom-name').value='';document.getElementById('bom-url').value='';
+  document.getElementById('bomForm').classList.remove('open');
+  renderBom();
+}
+function deleteBomItem(id,e){
+  e.stopPropagation();
+  if(!confirm('삭제하시겠습니까?'))return;
+  bomItems=bomItems.filter(b=>b.id!==id);
+  if(dbRef)dbRef.child('bom/'+id).remove();
+  renderBom();
+}
+let currentBomId=null;
+function openBomLink(id,e){
+  e.stopPropagation();
+  currentBomId=id;
+  const item=[...bomItems,...DEFAULT_BOM].find(b=>b.id===id||('b'+bomItems.indexOf(b))===id);
+  document.getElementById('bom-link-name').value=item?item.name:'';
+  document.getElementById('bom-link-url').value=item?item.url||'':'';
+  document.getElementById('bomLinkForm').style.display='block';
+  document.getElementById('bomLinkOverlay').style.display='block';
+}
+function closeBomLink(){
+  document.getElementById('bomLinkForm').style.display='none';
+  document.getElementById('bomLinkOverlay').style.display='none';
+}
+function saveBomLink(){
+  const url=document.getElementById('bom-link-url').value.trim();
+  if(!url){alert('URL을 입력해주세요');return;}
+  const allItems=[...bomItems,...DEFAULT_BOM];
+  const item=allItems.find(b=>b.id===currentBomId);
+  if(item){
+    item.url=url;
+    if(!bomItems.find(b=>b.id===currentBomId)){
+      bomItems.push({...item});
+    }
+    if(dbRef)dbRef.child('bom/'+currentBomId).set(item);
+  }
+  closeBomLink();
+  renderBom();
 }
 
 // NOTICES
@@ -791,6 +928,14 @@ function initFirebase(){
         dbRef.child('as').on('value',snap=>{
           const data=snap.val();
           asItems=data?Object.values(data).filter(a=>a&&a.id):[];
+        });
+        dbRef.child('bom').on('value',snap=>{
+          const data=snap.val();
+          bomItems=data?Object.values(data).filter(b=>b&&b.id):[];
+        });
+        dbRef.child('clFiles').on('value',snap=>{
+          const data=snap.val();
+          clFiles=data||{};
         });
         const bar=document.getElementById('statusBar');
         bar.className='status-bar connected';
