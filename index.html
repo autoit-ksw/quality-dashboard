@@ -464,15 +464,58 @@ function renderVerify(){
   g.innerHTML=projects.filter(p=>p&&p.id&&p.type).map(p=>{
     const chks=CHECKLISTS[p.type]||[], pct=getPct(p);
     const bc=pct===100?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
+    const statusOpts=STATUSES.map(s=>`<option value="${s}"${p.status===s?' selected':''}>${s}</option>`).join('');
+    const stepOpts=['EP 1','EP 2','MP READY','양산','수입검사','납품검사'].map(s=>`<option value="${s}"${p.step===s?' selected':''}>${s}</option>`).join('');
     return `<div class="verify-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-        <div><div class="vc-name">${p.name}</div><div class="vc-type">${p.type} · ${p.step||'-'} · 담당: ${p.owner||'미지정'}</div></div>
-        <span class="badge ${STATUS_CLS[p.status]||'b-wait'}">${p.status||'대기'}</span>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="vc-name">${p.name}</div>
+          <select style="background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:11px;padding:2px 6px;font-family:var(--font-b)" onchange="verifyChangeStatus('${p.id}',this.value)">${statusOpts}</select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:10px;color:var(--text3)">${p.type}</span>
+          <select style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:10px;padding:1px 5px;font-family:var(--font-b)" onchange="verifyChangeStep('${p.id}',this.value)">${stepOpts}</select>
+          <span style="font-size:10px;color:var(--text3)">담당:
+            <input value="${p.owner||''}" placeholder="미지정" style="background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text2);font-size:10px;width:60px;font-family:var(--font-b);outline:none" onchange="verifyChangeOwner('${p.id}',this.value)">
+          </span>
+        </div>
       </div>
       <div class="prog-wrap" style="margin-bottom:10px"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${bc}"></div></div><span class="prog-pct">${pct}%</span></div>
-      <div class="vc-items">${chks.map(c=>{const done=(p.done||[]).includes(c);return `<div class="vc-item${done?' done':' miss'}"><span>${c}</span><span class="vc-check">${done?'✓':'○'}</span></div>`;}).join('')}</div>
+      <div class="chk-grid" style="padding:0;margin-bottom:4px">${chks.map(c=>{
+        const done=(p.done||[]).includes(c);
+        return `<div class="chk-tag${done?' done':''}" onclick="verifyToggleCheck('${p.id}','${c}')">${done?'✓ ':'○ '}${c}</div>`;
+      }).join('')}</div>
+      ${getMissing(p).length>0?`<div style="font-size:10px;color:var(--red);margin-top:6px">⚠ 미완료 ${getMissing(p).length}건</div>`:'<div style="font-size:10px;color:var(--green);margin-top:6px">✓ 검증 완료</div>'}
     </div>`;
   }).join('');
+}
+
+function verifyChangeStatus(id,val){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  p.status=val;
+  if(dbRef)dbRef.child('projects/'+id+'/status').set(val);
+  renderKPI();renderTable();renderProjTable();
+}
+function verifyChangeStep(id,val){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  p.step=val;
+  if(dbRef)dbRef.child('projects/'+id+'/step').set(val);
+  renderProjTable();
+}
+function verifyChangeOwner(id,val){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  p.owner=val;
+  if(dbRef)dbRef.child('projects/'+id+'/owner').set(val);
+  renderProjTable();
+}
+function verifyToggleCheck(pid,chk){
+  const p=projects.find(x=>x.id===pid);if(!p)return;
+  if(!p.done)p.done=[];
+  if(p.done.includes(chk))p.done=p.done.filter(c=>c!==chk);
+  else p.done.push(chk);
+  if(dbRef)dbRef.child('projects/'+pid+'/done').set(p.done);
+  render();
+  renderVerify();
 }
 
 // ISSUES
