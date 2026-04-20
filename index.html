@@ -6,395 +6,211 @@
 <title>AutoIT Quality Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0d1117;
-  --bg2: #161b22;
-  --bg3: #1c2333;
-  --bg4: #21262d;
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.14);
-  --text: #e6edf3;
-  --text2: #8b949e;
-  --text3: #6e7681;
-  --accent: #2f81f7;
-  --accent2: #388bfd;
-  --green: #3fb950;
-  --yellow: #d29922;
-  --red: #f85149;
-  --orange: #db6d28;
-  --purple: #a371f7;
-  --font-display: 'Rajdhani', sans-serif;
-  --font-body: 'Noto Sans KR', sans-serif;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--bg4:#21262d;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
+  --accent:#2f81f7;--green:#3fb950;--yellow:#d29922;--red:#f85149;
+  --font-d:'Rajdhani',sans-serif;--font-b:'Noto Sans KR',sans-serif;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; display: flex; }
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;display:flex}
 
 /* SIDEBAR */
-.sidebar {
-  width: 220px; min-height: 100vh; background: var(--bg2);
-  border-right: 1px solid var(--border); display: flex; flex-direction: column;
-  position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
-}
-.sidebar-logo {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--border);
-}
-.logo-top { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--accent); letter-spacing: 2px; }
-.logo-sub { font-size: 10px; font-weight: 400; color: var(--text3); letter-spacing: 3px; margin-top: 1px; }
-.nav { flex: 1; padding: 12px 0; }
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 20px; font-size: 13px; color: var(--text2);
-  cursor: pointer; transition: all .15s; border-left: 2px solid transparent;
-}
-.nav-item:hover { color: var(--text); background: rgba(255,255,255,.04); }
-.nav-item.active { color: var(--accent); background: rgba(47,129,247,.08); border-left-color: var(--accent); }
-.nav-icon { font-size: 15px; width: 18px; text-align: center; }
-.sidebar-user {
-  padding: 14px 20px; border-top: 1px solid var(--border);
-  display: flex; align-items: center; gap: 10px;
-}
-.avatar {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--purple));
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 13px; font-weight: 700; color: #fff;
-}
-.user-name { font-size: 13px; font-weight: 500; color: var(--text); }
-.user-role { font-size: 11px; color: var(--text3); }
+.sidebar{width:200px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:10}
+.logo{padding:18px 18px 14px;border-bottom:1px solid var(--border)}
+.logo-t{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--accent);letter-spacing:2px}
+.logo-s{font-size:10px;color:var(--text3);letter-spacing:3px;margin-top:1px}
+.nav{flex:1;padding:10px 0}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:13px;color:var(--text2);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.ni:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.ni.active{color:var(--accent);background:rgba(47,129,247,.08);border-left-color:var(--accent)}
+.user-box{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#a371f7);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.u-name{font-size:12px;font-weight:500}
+.u-role{font-size:10px;color:var(--text3)}
 
 /* MAIN */
-.main { margin-left: 220px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.main{margin-left:200px;flex:1;display:flex;flex-direction:column}
+.topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:9}
+.tb-title{font-family:var(--font-d);font-size:18px;font-weight:700;letter-spacing:2px}
+.tb-date{font-size:11px;color:var(--text3)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.search-wrap{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:5px 10px}
+.search-wrap input{background:none;border:none;outline:none;font-size:12px;color:var(--text);font-family:var(--font-b);width:140px}
+.search-wrap input::placeholder{color:var(--text3)}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.2);padding:3px 9px;border-radius:20px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* TOPBAR */
-.topbar {
-  height: 56px; background: var(--bg2); border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; padding: 0 24px; gap: 16px; position: sticky; top: 0; z-index: 40;
-}
-.topbar-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: 2px; color: var(--text); }
-.topbar-date { font-size: 12px; color: var(--text3); margin-left: 4px; }
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
-.search-box {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
-  padding: 6px 12px; font-size: 13px; color: var(--text2);
-}
-.search-box input {
-  background: none; border: none; outline: none; font-size: 13px;
-  color: var(--text); font-family: var(--font-body); width: 160px;
-}
-.search-box input::placeholder { color: var(--text3); }
-.icon-btn {
-  width: 34px; height: 34px; border-radius: 8px; background: var(--bg3);
-  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 15px; color: var(--text2); transition: all .15s;
-}
-.icon-btn:hover { border-color: var(--border2); color: var(--text); }
-.live-badge {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11px; color: var(--green);
-  background: rgba(63,185,80,.1); border: 1px solid rgba(63,185,80,.2);
-  padding: 4px 10px; border-radius: 20px;
-}
-.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.5s infinite; }
-@keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+.content{padding:18px;display:flex;flex-direction:column;gap:16px}
 
-/* CONTENT */
-.content { padding: 24px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+/* STATUS BAR */
+.status-bar{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;font-size:11px;border:1px solid rgba(210,153,34,.2);background:rgba(210,153,34,.08);color:var(--yellow)}
+.status-bar.connected{border-color:rgba(63,185,80,.2);background:rgba(63,185,80,.08);color:var(--green)}
 
-/* KPI CARDS */
-.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-.kpi-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
-  padding: 20px 22px; position: relative; overflow: hidden; transition: border-color .15s;
-}
-.kpi-card:hover { border-color: var(--border2); }
-.kpi-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-}
-.kpi-card.blue::before { background: var(--accent); }
-.kpi-card.red::before { background: var(--red); }
-.kpi-card.green::before { background: var(--green); }
-.kpi-card.yellow::before { background: var(--yellow); }
-.kpi-label { font-size: 11px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
-.kpi-num {
-  font-family: var(--font-display); font-size: 40px; font-weight: 700; line-height: 1;
-  margin-bottom: 6px;
-}
-.kpi-card.blue .kpi-num { color: var(--accent); }
-.kpi-card.red .kpi-num { color: var(--red); }
-.kpi-card.green .kpi-num { color: var(--green); }
-.kpi-card.yellow .kpi-num { color: var(--yellow); }
-.kpi-sub { font-size: 11px; color: var(--text3); }
-.kpi-icon {
-  position: absolute; right: 18px; top: 18px; font-size: 22px; opacity: .25;
-}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.blue::before{background:var(--accent)}
+.kpi.red::before{background:var(--red)}
+.kpi.green::before{background:var(--green)}
+.kpi.yellow::before{background:var(--yellow)}
+.kpi-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.kpi-num{font-family:var(--font-d);font-size:36px;font-weight:700;line-height:1}
+.kpi.blue .kpi-num{color:var(--accent)}
+.kpi.red .kpi-num{color:var(--red)}
+.kpi.green .kpi-num{color:var(--green)}
+.kpi.yellow .kpi-num{color:var(--yellow)}
+.kpi-sub{font-size:10px;color:var(--text3);margin-top:4px}
 
-/* BODY GRID */
-.body-grid { display: grid; grid-template-columns: 1fr 300px; gap: 20px; flex: 1; }
+/* BODY */
+.body-grid{display:grid;grid-template-columns:1fr 280px;gap:16px}
 
-/* TABLE SECTION */
-.section-card {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
-  display: flex; flex-direction: column; overflow: hidden;
-}
-.section-header {
-  padding: 16px 20px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.section-title {
-  font-family: var(--font-display); font-size: 16px; font-weight: 600;
-  letter-spacing: 1.5px; color: var(--text);
-  display: flex; align-items: center; gap: 10px;
-}
-.section-title::before {
-  content: ''; display: inline-block; width: 3px; height: 16px;
-  background: var(--accent); border-radius: 2px;
-}
-.section-actions { display: flex; gap: 8px; }
-.filter-chip {
-  padding: 4px 12px; font-size: 11px; border-radius: 20px;
-  border: 1px solid var(--border); color: var(--text3);
-  cursor: pointer; transition: all .15s; font-family: var(--font-body);
-  background: transparent;
-}
-.filter-chip:hover { border-color: var(--border2); color: var(--text); }
-.filter-chip.active { background: rgba(47,129,247,.15); border-color: var(--accent); color: var(--accent); }
-.add-proj-btn {
-  padding: 5px 14px; font-size: 12px; border-radius: 6px;
-  background: var(--accent); color: #fff; border: none;
-  cursor: pointer; font-family: var(--font-body); font-weight: 500;
-  transition: opacity .15s;
-}
-.add-proj-btn:hover { opacity: .85; }
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.card-title{font-family:var(--font-d);font-size:15px;font-weight:600;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';display:inline-block;width:3px;height:14px;background:var(--accent);border-radius:2px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fc{padding:4px 10px;font-size:11px;border-radius:20px;border:1px solid var(--border);color:var(--text3);cursor:pointer;background:transparent;font-family:var(--font-b);transition:all .15s}
+.fc:hover{border-color:var(--border2);color:var(--text)}
+.fc.on{background:rgba(47,129,247,.15);border-color:var(--accent);color:var(--accent)}
+.add-btn{padding:5px 12px;font-size:11px;border-radius:6px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:var(--font-b);font-weight:500}
+
+/* ADD FORM - inline, no modal */
+.add-form{background:var(--bg3);border-bottom:1px solid var(--border);padding:14px 18px;display:none}
+.add-form.open{display:block}
+.form-grid{display:grid;grid-template-columns:repeat(5,1fr) auto;gap:10px;align-items:end}
+.fg label{display:block;font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.fg input,.fg select{width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none}
+.fg input:focus,.fg select:focus{border-color:var(--accent)}
+.fg select option{background:var(--bg2)}
+.save-btn{padding:7px 16px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:500;white-space:nowrap}
+.cancel-btn{padding:7px 12px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:var(--font-b);font-size:12px;margin-left:6px}
 
 /* TABLE */
-.proj-table { width: 100%; border-collapse: collapse; }
-.proj-table th {
-  font-size: 11px; color: var(--text3); font-weight: 400; letter-spacing: 1px;
-  text-transform: uppercase; padding: 10px 20px; text-align: left;
-  border-bottom: 1px solid var(--border); background: var(--bg3);
-}
-.proj-table td { padding: 0; }
-.proj-row { border-bottom: 1px solid var(--border); cursor: pointer; transition: background .12s; }
-.proj-row:hover { background: rgba(255,255,255,.03); }
-.proj-row:last-child { border-bottom: none; }
-.proj-row td { padding: 0; }
-.proj-cell { padding: 14px 20px; font-size: 13px; }
-.proj-no { color: var(--text3); font-family: var(--font-display); font-weight: 600; }
-.proj-name { font-weight: 500; color: var(--text); }
-.proj-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.proj-table{width:100%;border-collapse:collapse}
+.proj-table th{font-size:10px;color:var(--text3);font-weight:400;letter-spacing:1px;text-transform:uppercase;padding:9px 18px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg3)}
+.proj-row{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
+.proj-row:hover{background:rgba(255,255,255,.02)}
+.proj-row:last-child{border-bottom:none}
+.proj-row.missing{border-left:2px solid var(--red)}
+.pc{padding:12px 18px;font-size:12px}
+.pno{color:var(--text3);font-family:var(--font-d);font-weight:600}
+.pname{font-weight:500;color:var(--text)}
+.psub{font-size:10px;color:var(--text3);margin-top:2px}
 
-/* STATUS BADGES */
-.badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
-}
-.badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
-.badge-progress { background: rgba(47,129,247,.15); color: var(--accent); border: 1px solid rgba(47,129,247,.25); }
-.badge-progress::before { background: var(--accent); }
-.badge-delay { background: rgba(248,81,73,.15); color: var(--red); border: 1px solid rgba(248,81,73,.25); }
-.badge-delay::before { background: var(--red); }
-.badge-ok { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid rgba(63,185,80,.25); }
-.badge-ok::before { background: var(--green); }
-.badge-wait { background: rgba(210,153,34,.15); color: var(--yellow); border: 1px solid rgba(210,153,34,.25); }
-.badge-wait::before { background: var(--yellow); }
-.badge-type { background: var(--bg4); color: var(--text2); border: 1px solid var(--border); font-size: 10px; }
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
+.badge::before{content:'';width:4px;height:4px;border-radius:50%}
+.b-prog{background:rgba(47,129,247,.15);color:var(--accent);border:1px solid rgba(47,129,247,.25)}.b-prog::before{background:var(--accent)}
+.b-delay{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.25)}.b-delay::before{background:var(--red)}
+.b-ok{background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.25)}.b-ok::before{background:var(--green)}
+.b-wait{background:rgba(210,153,34,.15);color:var(--yellow);border:1px solid rgba(210,153,34,.25)}.b-wait::before{background:var(--yellow)}
+.b-type{background:var(--bg4);color:var(--text2);border:1px solid var(--border);font-size:10px}
 
-/* PROGRESS BAR */
-.prog-wrap { display: flex; align-items: center; gap: 10px; min-width: 130px; }
-.prog-bg { flex: 1; height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
-.prog-fill { height: 100%; border-radius: 2px; transition: width .4s; }
-.prog-pct { font-size: 11px; color: var(--text3); min-width: 28px; text-align: right; font-family: var(--font-display); }
+.prog-wrap{display:flex;align-items:center;gap:8px}
+.prog-bg{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width .3s}
+.prog-pct{font-size:10px;color:var(--text3);min-width:26px;text-align:right;font-family:var(--font-d)}
 
 /* CHECKLIST EXPAND */
-.check-expand { background: var(--bg3); border-top: 1px solid var(--border); display: none; }
-.check-expand.open { display: block; }
-.check-grid { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 20px; }
-.check-tag {
-  display: flex; align-items: center; gap: 5px;
-  padding: 4px 10px; border-radius: 6px; font-size: 11px;
-  border: 1px solid var(--border); color: var(--text3); cursor: pointer;
-  transition: all .12s; background: var(--bg4);
-}
-.check-tag:hover { border-color: var(--border2); }
-.check-tag.done { background: rgba(63,185,80,.1); border-color: rgba(63,185,80,.3); color: var(--green); }
-.check-tag .ck { font-size: 10px; }
-.missing-bar {
-  margin: 0 20px 14px; padding: 7px 12px; border-radius: 6px;
-  background: rgba(248,81,73,.08); border: 1px solid rgba(248,81,73,.2);
-  font-size: 11px; color: #f85149; display: flex; align-items: center; gap: 8px;
-}
+.chk-expand{background:var(--bg3);border-top:1px solid var(--border);display:none}
+.chk-expand.open{display:block}
+.chk-grid{display:flex;flex-wrap:wrap;gap:5px;padding:12px 18px}
+.chk-tag{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;font-size:11px;border:1px solid var(--border);color:var(--text3);cursor:pointer;background:var(--bg4);transition:all .12s;user-select:none}
+.chk-tag:hover{border-color:var(--border2)}
+.chk-tag.done{background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.3);color:var(--green)}
+.miss-bar{margin:0 18px 12px;padding:6px 10px;border-radius:5px;background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.2);font-size:11px;color:var(--red)}
 
-/* SIDEBAR RIGHT */
-.right-col { display: flex; flex-direction: column; gap: 14px; }
-
-/* NOTICE */
-.notice-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.notice-header { padding: 14px 18px; border-bottom: 1px solid var(--border); }
-.notice-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; color: var(--text3); text-transform: uppercase; }
-.notice-item { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; cursor: pointer; transition: background .12s; }
-.notice-item:hover { background: rgba(255,255,255,.02); }
-.notice-item:last-child { border-bottom: none; }
-.notice-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-.notice-dot.red { background: var(--red); }
-.notice-dot.yellow { background: var(--yellow); }
-.notice-dot.blue { background: var(--accent); }
-.notice-text { font-size: 12px; color: var(--text); font-weight: 500; }
-.notice-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
-.notice-d { font-size: 10px; color: var(--text3); margin-left: auto; white-space: nowrap; margin-top: 1px; }
-
-/* LIBRARY CARD */
-.library-card {
-  background: linear-gradient(135deg, #1a3a6e, #1e1b4b);
-  border: 1px solid rgba(47,129,247,.25); border-radius: 12px;
-  padding: 20px 18px;
-}
-.lib-tag { font-size: 10px; color: rgba(255,255,255,.5); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
-.lib-title { font-size: 15px; font-weight: 500; color: #fff; line-height: 1.4; margin-bottom: 16px; }
-.lib-btn {
-  display: inline-block; padding: 7px 16px; background: var(--accent);
-  color: #fff; border-radius: 6px; font-size: 11px; font-weight: 700;
-  letter-spacing: 1px; cursor: pointer; text-transform: uppercase;
-  border: none; font-family: var(--font-body); transition: opacity .15s;
-}
-.lib-btn:hover { opacity: .85; }
-
-/* FIREBASE STATUS */
-.firebase-bar {
-  display: flex; align-items: center; gap: 10px; padding: 8px 14px;
-  background: rgba(210,153,34,.08); border: 1px solid rgba(210,153,34,.2);
-  border-radius: 8px; font-size: 11px; color: var(--yellow);
-}
-.firebase-bar .setup-btn {
-  margin-left: auto; padding: 3px 10px; background: var(--yellow); color: #000;
-  border: none; border-radius: 4px; font-size: 11px; cursor: pointer;
-  font-family: var(--font-body); font-weight: 700;
-}
-
-/* MODAL */
-.modal-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; z-index: 99999; }
-.modal-bg.open { display: flex !important; }
-.modal {
-  background: var(--bg2); border: 1px solid var(--border2); border-radius: 14px;
-  padding: 24px; width: min(460px, 90vw); max-height: 85vh; overflow-y: auto;
-}
-.modal h3 { font-family: var(--font-display); font-size: 18px; font-weight: 600; letter-spacing: 1px; margin-bottom: 20px; color: var(--text); }
-.form-row { margin-bottom: 14px; }
-.form-row label { display: block; font-size: 11px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
-.form-row input, .form-row select {
-  width: 100%; padding: 9px 12px; font-size: 13px;
-  background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: 8px; color: var(--text); font-family: var(--font-body); outline: none;
-  transition: border-color .15s;
-}
-.form-row input:focus, .form-row select:focus { border-color: var(--accent); }
-.form-row select option { background: var(--bg2); }
-.modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-.btn-ghost { padding: 8px 18px; border: 1px solid var(--border2); border-radius: 7px; background: none; color: var(--text2); cursor: pointer; font-family: var(--font-body); font-size: 13px; }
-.btn-primary { padding: 8px 18px; border: none; border-radius: 7px; background: var(--accent); color: #fff; cursor: pointer; font-family: var(--font-body); font-size: 13px; font-weight: 500; }
-
-/* FIREBASE CONFIG MODAL */
-.fb-input { font-family: monospace; font-size: 12px; background: var(--bg); }
-.fb-tip { font-size: 11px; color: var(--text3); line-height: 1.6; margin-bottom: 14px; }
+/* RIGHT */
+.right-col{display:flex;flex-direction:column;gap:14px}
+.notice-item{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;cursor:pointer}
+.notice-item:hover{background:rgba(255,255,255,.02)}
+.notice-item:last-child{border-bottom:none}
+.ndot{width:5px;height:5px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.ndot.r{background:var(--red)}.ndot.y{background:var(--yellow)}.ndot.b{background:var(--accent)}
+.ntxt{font-size:12px;font-weight:500}
+.nsub{font-size:10px;color:var(--text3);margin-top:2px}
+.nd{font-size:10px;color:var(--text3);margin-left:auto;white-space:nowrap}
+.lib-card{background:linear-gradient(135deg,#1a3a6e,#1e1b4b);border:1px solid rgba(47,129,247,.25);border-radius:10px;padding:18px 16px}
+.lib-tag{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.lib-title{font-size:14px;font-weight:500;color:#fff;line-height:1.4;margin-bottom:14px}
+.lib-btn{padding:6px 14px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:var(--font-b)}
+.empty{text-align:center;padding:28px;color:var(--text3);font-size:13px}
 </style>
 </head>
 <body>
-
-<!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-top">QUALITY</div>
-    <div class="logo-sub">SI OPERATION</div>
-  </div>
+  <div class="logo"><div class="logo-t">QUALITY</div><div class="logo-s">SI OPERATION</div></div>
   <nav class="nav">
-    <div class="nav-item active" onclick="navigate(this,'dashboard')"><span class="nav-icon">▦</span>대시보드 홈</div>
-    <div class="nav-item" onclick="navigate(this,'projects')"><span class="nav-icon">◈</span>프로젝트 관리</div>
-    <div class="nav-item" onclick="navigate(this,'verify')"><span class="nav-icon">↗</span>검증 현황</div>
-    <div class="nav-item" onclick="navigate(this,'issue')"><span class="nav-icon">△</span>이슈 관리</div>
-    <div class="nav-item" onclick="navigate(this,'as')"><span class="nav-icon">⚙</span>A/S 및 RMA</div>
-    <div class="nav-item" onclick="navigate(this,'check')"><span class="nav-icon">☑</span>체크리스트</div>
-    <div class="nav-item" onclick="navigate(this,'bom')"><span class="nav-icon">◻</span>BOM / 자료실</div>
+    <div class="ni active">▦ 대시보드 홈</div>
+    <div class="ni">◈ 프로젝트 관리</div>
+    <div class="ni">↗ 검증 현황</div>
+    <div class="ni">△ 이슈 관리</div>
+    <div class="ni">⚙ A/S 및 RMA</div>
+    <div class="ni">☑ 체크리스트</div>
+    <div class="ni">◻ BOM / 자료실</div>
   </nav>
-  <div class="sidebar-user">
-    <div class="avatar">SW</div>
-    <div>
-      <div class="user-name">김승원 부장</div>
-      <div class="user-role">품질운영 총괄</div>
-    </div>
-  </div>
+  <div class="user-box"><div class="avatar">SW</div><div><div class="u-name">김승원 부장</div><div class="u-role">품질운영 총괄</div></div></div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
-  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-title">DASHBOARD</div>
-    <div class="topbar-date" id="topDate"></div>
-    <div class="topbar-right">
-      <div class="search-box">
-        <span style="color:var(--text3);font-size:13px">🔍</span>
-        <input placeholder="검색어를 입력하세요..." id="searchInput" oninput="filterProjects(this.value)">
-      </div>
-      <div class="icon-btn" onclick="openFbModal()">🔥</div>
-      <div class="icon-btn">🔔</div>
+    <div class="tb-title">DASHBOARD</div>
+    <div class="tb-date" id="topDate"></div>
+    <div class="tb-right">
+      <div class="search-wrap"><span style="color:var(--text3);font-size:12px">🔍</span><input placeholder="프로젝트 검색..." id="searchInput" oninput="renderTable()"></div>
       <div class="live-badge"><span class="live-dot"></span>LIVE</div>
     </div>
   </div>
 
   <div class="content">
-    <!-- FIREBASE STATUS BAR -->
-    <div class="firebase-bar" id="fbBar">
-      <span>🔥</span>
-      <span id="fbStatus">Firebase 미연결 — 데모 모드로 실행 중 (팀원과 공유하려면 Firebase 설정 필요)</span>
-      <button class="setup-btn" onclick="openFbModal()">설정하기</button>
-    </div>
-
-    <!-- KPI -->
+    <div class="status-bar" id="statusBar">🔥 Firebase 연결 중...</div>
     <div class="kpi-grid" id="kpiGrid"></div>
-
-    <!-- BODY -->
     <div class="body-grid">
-      <!-- PROJECTS TABLE -->
-      <div class="section-card">
-        <div class="section-header">
-          <div class="section-title">프로젝트 현황</div>
-          <div class="section-actions">
-            <button class="filter-chip active" data-f="all" onclick="setFilter(this)">전체</button>
-            <button class="filter-chip" data-f="4M변경" onclick="setFilter(this)">4M변경</button>
-            <button class="filter-chip" data-f="신규개발" onclick="setFilter(this)">신규개발</button>
-            <button class="filter-chip" data-f="납품검사" onclick="setFilter(this)">납품검사</button>
-            <button class="filter-chip" data-f="missing" onclick="setFilter(this)">누락있음</button>
-            <button class="add-proj-btn" onclick="openAddModal()">+ 추가</button>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">프로젝트 현황</div>
+          <div class="filters">
+            <button class="fc on" data-f="all" onclick="setFilter(this)">전체</button>
+            <button class="fc" data-f="4M변경" onclick="setFilter(this)">4M변경</button>
+            <button class="fc" data-f="신규개발" onclick="setFilter(this)">신규개발</button>
+            <button class="fc" data-f="납품검사" onclick="setFilter(this)">납품검사</button>
+            <button class="fc" data-f="missing" onclick="setFilter(this)">누락있음</button>
+            <button class="add-btn" onclick="toggleAddForm()">+ 추가</button>
+          </div>
+        </div>
+        <div class="add-form" id="addForm">
+          <div class="form-grid">
+            <div class="fg"><label>프로젝트명</label><input id="f-name" placeholder="예: AMC-HC20N 수입검사"></div>
+            <div class="fg"><label>유형</label><select id="f-type"><option value="4M변경">4M변경</option><option value="신규개발">신규개발/양산이관</option><option value="납품검사">납품검사/수입검사</option></select></div>
+            <div class="fg"><label>단계</label><select id="f-step"><option>EP 1</option><option>EP 2</option><option>MP READY</option><option>양산</option><option>수입검사</option><option>납품검사</option></select></div>
+            <div class="fg"><label>담당자</label><input id="f-owner" placeholder="홍길동"></div>
+            <div class="fg"><label>목표일</label><input id="f-due" type="date"></div>
+            <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveProject()">등록</button><button class="cancel-btn" onclick="toggleAddForm()">취소</button></div></div>
           </div>
         </div>
         <table class="proj-table">
-          <thead>
-            <tr>
-              <th style="width:44px">NO</th>
-              <th>프로젝트명</th>
-              <th style="width:90px">유형</th>
-              <th style="width:100px">단계</th>
-              <th style="width:80px">상태</th>
-              <th style="width:150px">검증 진행률</th>
-              <th style="width:100px">목표일</th>
-            </tr>
-          </thead>
+          <thead><tr>
+            <th style="width:40px">NO</th>
+            <th>프로젝트명</th>
+            <th style="width:80px">유형</th>
+            <th style="width:90px">단계</th>
+            <th style="width:70px">상태</th>
+            <th style="width:140px">검증 진행률</th>
+            <th style="width:95px">목표일</th>
+          </tr></thead>
           <tbody id="projTbody"></tbody>
         </table>
       </div>
-
-      <!-- RIGHT COL -->
       <div class="right-col">
-        <!-- NOTICE -->
-        <div class="notice-card">
-          <div class="notice-header">
-            <div class="notice-title">📅 Notice / Schedule</div>
-          </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title" style="font-size:12px">📅 Notice / Schedule</div></div>
           <div id="noticeList"></div>
         </div>
-        <!-- LIBRARY -->
-        <div class="library-card">
+        <div class="lib-card">
           <div class="lib-tag">Internal Library</div>
           <div class="lib-title">표준 품질 양식 및<br>BOM 자료실 바로가기</div>
           <button class="lib-btn">GO TO FOLDER →</button>
@@ -404,266 +220,159 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
   </div>
 </main>
 
-<!-- ADD PROJECT MODAL -->
-<div class="modal-bg" id="addModal">
-  <div class="modal">
-    <h3>신규 프로젝트 등록</h3>
-    <div class="form-row"><label>프로젝트명</label><input id="f-name" placeholder="예: AMC-HC20N 수입검사" /></div>
-    <div class="form-row"><label>유형</label>
-      <select id="f-type">
-        <option value="4M변경">4M변경</option>
-        <option value="신규개발">신규개발/양산이관</option>
-        <option value="납품검사">납품검사/수입검사</option>
-      </select>
-    </div>
-    <div class="form-row"><label>단계</label>
-      <select id="f-step">
-        <option value="EP 1">EP 1</option><option value="EP 2">EP 2</option>
-        <option value="MP READY">MP READY</option><option value="양산">양산</option>
-        <option value="수입검사">수입검사</option><option value="납품검사">납품검사</option>
-      </select>
-    </div>
-    <div class="form-row"><label>담당자</label><input id="f-owner" placeholder="예: 홍길동" /></div>
-    <div class="form-row"><label>목표 완료일</label><input id="f-due" type="date" /></div>
-    <div class="modal-footer">
-      <button class="btn-ghost" onclick="closeAddModal()">취소</button>
-      <button class="btn-primary" onclick="saveProject()">등록</button>
-    </div>
-  </div>
-</div>
-
-<!-- FIREBASE SETUP MODAL -->
-<div class="modal-bg" id="fbModal">
-  <div class="modal">
-    <h3>🔥 Firebase 연결 설정</h3>
-    <p class="fb-tip">
-      Firebase Console → 프로젝트 설정 → 웹앱 → firebaseConfig 값을 아래에 붙여넣으세요.<br>
-      연결 후 팀원 모두 실시간으로 같은 데이터를 공유합니다.
-    </p>
-    <div class="form-row"><label>API Key</label><input class="fb-input" id="fb-apiKey" placeholder="AIzaSy..." /></div>
-    <div class="form-row"><label>Database URL</label><input class="fb-input" id="fb-dbUrl" placeholder="https://your-project-default-rtdb.asia-southeast1.firebasedatabase.app" /></div>
-    <div class="form-row"><label>Project ID</label><input class="fb-input" id="fb-projectId" placeholder="your-project-id" /></div>
-    <div class="form-row"><label>App ID</label><input class="fb-input" id="fb-appId" placeholder="1:123456789:web:abc..." /></div>
-    <div class="modal-footer">
-      <button class="btn-ghost" onclick="closeFbModal()">취소</button>
-      <button class="btn-primary" onclick="connectFirebase()">연결하기</button>
-    </div>
-  </div>
-</div>
-
 <script>
 const CHECKLISTS = {
-  "4M변경": ["변경점 파악","영향 분석","시료 접수","검증 시험","비교 평가","고객 승인","양산 적용 확인","이력 등록"],
-  "신규개발": ["요구사항 확인","사양서 검토","초기 샘플 검사","신뢰성 시험","양산 시료 검사","고객 승인","양산 이관 확인","이력 등록"],
-  "납품검사": ["수량 확인","외관 검사","기능 시험","치수 측정","성적서 확인","불량 처리","합격 판정","입고 등록"]
+  "4M변경":["변경점 파악","영향 분석","시료 접수","검증 시험","비교 평가","고객 승인","양산 적용 확인","이력 등록"],
+  "신규개발":["요구사항 확인","사양서 검토","초기 샘플 검사","신뢰성 시험","양산 시료 검사","고객 승인","양산 이관 확인","이력 등록"],
+  "납품검사":["수량 확인","외관 검사","기능 시험","치수 측정","성적서 확인","불량 처리","합격 판정","입고 등록"]
 };
-
-const STATUS_MAP = {
-  "진행중": "badge-progress",
-  "지연": "badge-delay",
-  "정상": "badge-ok",
-  "대기": "badge-wait"
+const STATUS_CLS = {"진행중":"b-prog","지연":"b-delay","정상":"b-ok","대기":"b-wait"};
+const FB_CONFIG = {
+  apiKey:'AIzaSyCWEGzctMIcbgQwil4ZdCanZxZybHHrFu4',
+  databaseURL:'https://qualitydash01-6a6ac-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId:'qualitydash01-6a6ac',
+  appId:'1:282750403382:web:b6341635ab0b186fcc2997'
 };
-
-let projects = [
-  {id:'p1',name:'RV3K-PRO',type:'신규개발',step:'EP 1',status:'진행중',owner:'이승원',due:'2026-05-20',done:['요구사항 확인','사양서 검토','초기 샘플 검사']},
-  {id:'p2',name:'제독차 차세대 PJT',type:'4M변경',step:'EP 2',status:'지연',owner:'김철수',due:'2026-04-30',done:['변경점 파악','영향 분석','시료 접수','검증 시험']},
-  {id:'p3',name:'통합 허브 V2.0',type:'신규개발',step:'MP READY',status:'정상',owner:'박지영',due:'2026-06-15',done:['요구사항 확인','사양서 검토','초기 샘플 검사','신뢰성 시험','양산 시료 검사','고객 승인','양산 이관 확인','이력 등록']},
-  {id:'p4',name:'AIMS 모듈 v1.1',type:'4M변경',step:'EP 1',status:'진행중',owner:'황인호',due:'2026-07-10',done:['변경점 파악','영향 분석']}
+const NOTICES = [
+  {c:'r',text:'연차 사용 계획 보고',sub:'금주 금요일까지 김승원 부장 보고',d:'D-1'},
+  {c:'y',text:'이카운트 지출 결의',sub:'3월분 부서 비용 정산 완료 요청',d:'D-1'},
+  {c:'b',text:'차세대 제독차 시연',sub:'현장 필드 시험 완료 보고회',d:'14:00'}
 ];
 
-const notices = [
-  {color:'red',text:'연차 사용 계획 보고',sub:'금주 금요일까지 김승원 부장 보고',d:'D-1'},
-  {color:'yellow',text:'이카운트 지출 결의',sub:'3월분 부서 비용 정산 완료 요청',d:'D-1'},
-  {color:'blue',text:'차세대 제독차 시연',sub:'현장 필드 시험 완료 보고회',d:'14:00'}
-];
-
-let currentFilter = 'all';
+let projects = [];
+let filter = 'all';
 let expandedId = null;
-let fbConnected = false;
 let dbRef = null;
 
-function today() {
-  const d = new Date();
-  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  return `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')}. (${days[d.getDay()]})`;
-}
-document.getElementById('topDate').textContent = today();
+// DATE
+const d = new Date();
+const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+document.getElementById('topDate').textContent = `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')}. (${days[d.getDay()]})`;
 
-function getPct(p) {
-  const total = CHECKLISTS[p.type]?.length || 1;
-  return Math.round((p.done.length / total) * 100);
-}
-function getMissing(p) {
-  return (CHECKLISTS[p.type] || []).filter(c => !p.done.includes(c));
-}
+function getPct(p){ const t=(CHECKLISTS[p.type]||[]).length||1; return Math.round(((p.done||[]).length/t)*100); }
+function getMissing(p){ return (CHECKLISTS[p.type]||[]).filter(c=>!(p.done||[]).includes(c)); }
 
-function renderKPI() {
-  const total = projects.length;
-  const missing = projects.filter(p => getMissing(p).length > 0).length;
-  const pcts = projects.map(p => getPct(p));
-  const avg = total ? Math.round(pcts.reduce((a,b)=>a+b,0)/total) : 0;
-  const issues = projects.filter(p => p.status === '지연').length;
-  document.getElementById('kpiGrid').innerHTML = `
-    <div class="kpi-card blue"><div class="kpi-label">신규 모델 진행</div><div class="kpi-num">${String(total).padStart(2,'0')}</div><div class="kpi-sub">진행 중인 프로젝트</div><div class="kpi-icon">⚙</div></div>
-    <div class="kpi-card red"><div class="kpi-label">누락 항목</div><div class="kpi-num">${String(missing).padStart(2,'0')}</div><div class="kpi-sub">검증 미완료 프로젝트</div><div class="kpi-icon">△</div></div>
-    <div class="kpi-card green"><div class="kpi-label">검증 완료율</div><div class="kpi-num">${avg}%</div><div class="kpi-sub">전체 평균 달성률</div><div class="kpi-icon">↗</div></div>
-    <div class="kpi-card yellow"><div class="kpi-label">지연 이슈</div><div class="kpi-num">${String(issues).padStart(2,'0')}</div><div class="kpi-sub">일정 지연 프로젝트</div><div class="kpi-icon">⚠</div></div>
-  `;
+function renderKPI(){
+  const t=projects.length, miss=projects.filter(p=>getMissing(p).length>0).length;
+  const avg=t?Math.round(projects.reduce((a,p)=>a+getPct(p),0)/t):0;
+  const delay=projects.filter(p=>p.status==='지연').length;
+  document.getElementById('kpiGrid').innerHTML=`
+    <div class="kpi blue"><div class="kpi-label">신규 모델 진행</div><div class="kpi-num">${String(t).padStart(2,'0')}</div><div class="kpi-sub">진행 중인 프로젝트</div></div>
+    <div class="kpi red"><div class="kpi-label">누락 항목</div><div class="kpi-num">${String(miss).padStart(2,'0')}</div><div class="kpi-sub">검증 미완료 프로젝트</div></div>
+    <div class="kpi green"><div class="kpi-label">검증 완료율</div><div class="kpi-num">${avg}%</div><div class="kpi-sub">전체 평균 달성률</div></div>
+    <div class="kpi yellow"><div class="kpi-label">지연 이슈</div><div class="kpi-num">${String(delay).padStart(2,'0')}</div><div class="kpi-sub">일정 지연 프로젝트</div></div>`;
 }
 
-function renderTable(list) {
-  const tbody = document.getElementById('projTbody');
-  if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3);font-size:13px">해당 프로젝트가 없습니다</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = list.map((p, i) => {
-    const pct = getPct(p);
-    const missing = getMissing(p);
-    const barColor = pct === 100 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
-    const checks = CHECKLISTS[p.type] || [];
-    const isOpen = expandedId === p.id;
-    const checkHtml = `<div class="check-expand ${isOpen ? 'open' : ''}" id="expand-${p.id}">
-      ${missing.length > 0 ? `<div class="missing-bar">⚠ 미완료 ${missing.length}건: ${missing.join(', ')}</div>` : ''}
-      <div class="check-grid">
-        ${checks.map(c => `<div class="check-tag ${p.done.includes(c)?'done':''}" onclick="toggleCheck('${p.id}','${c}',event)">
-          <span class="ck">${p.done.includes(c)?'✓':'○'}</span>${c}
-        </div>`).join('')}
-      </div>
-    </div>`;
-    return `<tr class="proj-row" onclick="toggleExpand('${p.id}')">
-      <td><div class="proj-cell proj-no">${String(i+1).padStart(2,'0')}</div></td>
-      <td><div class="proj-cell"><div class="proj-name">${p.name}</div><div class="proj-sub">담당: ${p.owner||'미지정'}</div></div></td>
-      <td><div class="proj-cell"><span class="badge badge-type">${p.type}</span></div></td>
-      <td><div class="proj-cell" style="font-size:13px;color:var(--text2)">${p.step||'-'}</div></td>
-      <td><div class="proj-cell"><span class="badge ${STATUS_MAP[p.status]||'badge-wait'}">${p.status||'대기'}</span></div></td>
-      <td><div class="proj-cell"><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${barColor}"></div></div><span class="prog-pct">${pct}%</span></div></div></td>
-      <td><div class="proj-cell" style="font-size:12px;color:var(--text3)">${p.due||'-'}</div></td>
+function renderTable(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  let list=projects.filter(p=>p&&p.id&&p.type);
+  if(q) list=list.filter(p=>p.name.toLowerCase().includes(q)||(p.owner||'').toLowerCase().includes(q));
+  if(filter==='missing') list=list.filter(p=>getMissing(p).length>0);
+  else if(filter!=='all') list=list.filter(p=>p.type.startsWith(filter));
+  const tb=document.getElementById('projTbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty">프로젝트가 없습니다. + 추가 버튼으로 등록하세요.</div></td></tr>`;return;}
+  tb.innerHTML=list.map((p,i)=>{
+    const pct=getPct(p), miss=getMissing(p);
+    const bc=pct===100?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
+    const chks=CHECKLISTS[p.type]||[];
+    const isOpen=expandedId===p.id;
+    const typeShort=p.type==='납품검사'?'납품검사':p.type==='신규개발'?'신규개발':p.type;
+    return `<tr class="proj-row${miss.length>0?' missing':''}" onclick="toggleExpand('${p.id}')">
+      <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
+      <td><div class="pc"><div class="pname">${p.name}</div><div class="psub">담당: ${p.owner||'미지정'}</div></div></td>
+      <td><div class="pc"><span class="badge b-type">${typeShort}</span></div></td>
+      <td><div class="pc" style="font-size:12px;color:var(--text2)">${p.step||'-'}</div></td>
+      <td><div class="pc"><span class="badge ${STATUS_CLS[p.status]||'b-wait'}">${p.status||'대기'}</span></div></td>
+      <td><div class="pc"><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${bc}"></div></div><span class="prog-pct">${pct}%</span></div></div></td>
+      <td><div class="pc" style="font-size:11px;color:var(--text3)">${p.due||'-'}</div></td>
     </tr>
-    <tr><td colspan="7" style="padding:0">${checkHtml}</td></tr>`;
+    <tr><td colspan="7" style="padding:0">
+      <div class="chk-expand${isOpen?' open':''}" id="cx-${p.id}">
+        ${miss.length>0?`<div class="miss-bar">⚠ 미완료 ${miss.length}건: ${miss.join(', ')}</div>`:''}
+        <div class="chk-grid">${chks.map(c=>`<div class="chk-tag${(p.done||[]).includes(c)?' done':''}" onclick="toggleCheck(event,'${p.id}','${c}')">${(p.done||[]).includes(c)?'✓ ':'○ '}${c}</div>`).join('')}</div>
+      </div>
+    </td></tr>`;
   }).join('');
 }
 
-function renderNotices() {
-  document.getElementById('noticeList').innerHTML = notices.map(n => `
-    <div class="notice-item">
-      <div class="notice-dot ${n.color}"></div>
-      <div><div class="notice-text">${n.text}</div><div class="notice-sub">${n.sub}</div></div>
-      <div class="notice-d">${n.d}</div>
-    </div>`).join('');
+function renderNotices(){
+  document.getElementById('noticeList').innerHTML=NOTICES.map(n=>`
+    <div class="notice-item"><div class="ndot ${n.c}"></div><div><div class="ntxt">${n.text}</div><div class="nsub">${n.sub}</div></div><div class="nd">${n.d}</div></div>`).join('');
 }
 
-function getFiltered() {
-  let list = [...projects];
-  const q = document.getElementById('searchInput')?.value?.trim().toLowerCase();
-  if (q) list = list.filter(p => p.name.toLowerCase().includes(q) || (p.owner||'').toLowerCase().includes(q));
-  if (currentFilter === 'missing') return list.filter(p => getMissing(p).length > 0);
-  if (currentFilter !== 'all') return list.filter(p => p.type.startsWith(currentFilter));
-  return list;
-}
+function render(){renderKPI();renderTable();renderNotices();}
 
-function render() { renderKPI(); renderTable(getFiltered()); renderNotices(); }
+function toggleExpand(id){expandedId=expandedId===id?null:id;renderTable();}
 
-function toggleExpand(id) {
-  expandedId = expandedId === id ? null : id;
-  renderTable(getFiltered());
-}
-
-function toggleCheck(pid, chk, e) {
+function toggleCheck(e,pid,chk){
   e.stopPropagation();
-  const p = projects.find(x => x.id === pid);
-  if (!p) return;
-  if (p.done.includes(chk)) p.done = p.done.filter(c => c !== chk);
+  const p=projects.find(x=>x.id===pid);if(!p)return;
+  if(!p.done)p.done=[];
+  if(p.done.includes(chk))p.done=p.done.filter(c=>c!==chk);
   else p.done.push(chk);
-  if (fbConnected && dbRef) {
-    dbRef.child('projects/' + pid + '/done').set(p.done);
-  }
+  if(dbRef)dbRef.child('projects/'+pid+'/done').set(p.done);
   render();
 }
 
-function setFilter(btn) {
-  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentFilter = btn.dataset.f;
-  renderTable(getFiltered());
+function setFilter(btn){
+  document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');filter=btn.dataset.f;renderTable();
 }
 
-function filterProjects() { renderTable(getFiltered()); }
-
-function navigate(el, page) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
+function toggleAddForm(){
+  const f=document.getElementById('addForm');
+  f.classList.toggle('open');
 }
 
-function openAddModal() { const m = document.getElementById('addModal'); m.classList.add('open'); m.style.display='flex'; }
-function closeAddModal() { const m = document.getElementById('addModal'); m.classList.remove('open'); m.style.display='none'; }
-
-function saveProject() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) { alert('프로젝트명을 입력해주세요'); return; }
-  const p = {
-    id: 'p' + Date.now(),
-    name,
-    type: document.getElementById('f-type').value,
-    step: document.getElementById('f-step').value,
-    owner: document.getElementById('f-owner').value.trim(),
-    due: document.getElementById('f-due').value,
-    status: '진행중',
-    done: []
+function saveProject(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){alert('프로젝트명을 입력해주세요');return;}
+  const p={
+    id:'p'+Date.now(),name,
+    type:document.getElementById('f-type').value,
+    step:document.getElementById('f-step').value,
+    owner:document.getElementById('f-owner').value.trim(),
+    due:document.getElementById('f-due').value,
+    status:'진행중',done:[]
   };
   projects.push(p);
-  if (fbConnected && dbRef) dbRef.child('projects/' + p.id).set(p);
-  closeAddModal();
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-owner').value = '';
+  if(dbRef)dbRef.child('projects/'+p.id).set(p);
+  document.getElementById('f-name').value='';
+  document.getElementById('f-owner').value='';
+  document.getElementById('addForm').classList.remove('open');
   render();
 }
 
-function openFbModal() { const m = document.getElementById('fbModal'); m.classList.add('open'); m.style.display='flex'; }
-function closeFbModal() { const m = document.getElementById('fbModal'); m.classList.remove('open'); m.style.display='none'; }
-
-const FB_CONFIG = {
-  apiKey: 'AIzaSyCWEGzctMIcbgQwil4ZdCanZxZybHHrFu4',
-  databaseURL: 'https://qualitydash01-6a6ac-default-rtdb.asia-southeast1.firebasedatabase.app',
-  projectId: 'qualitydash01-6a6ac',
-  appId: '1:282750403382:web:b6341635ab0b186fcc2997'
-};
-
-function initFirebase() {
-  const script1 = document.createElement('script');
-  script1.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
-  script1.onload = () => {
-    const script2 = document.createElement('script');
-    script2.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js';
-    script2.onload = () => {
-      try {
+function initFirebase(){
+  const s1=document.createElement('script');
+  s1.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
+  s1.onload=()=>{
+    const s2=document.createElement('script');
+    s2.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js';
+    s2.onload=()=>{
+      try{
         firebase.initializeApp(FB_CONFIG);
-        const db = firebase.database();
-        dbRef = db.ref('quality-dashboard');
-        dbRef.child('projects').on('value', snap => {
-          const data = snap.val();
-          if (data) {
-            const vals = Object.values(data);
-            projects = vals.filter(p => p && typeof p === 'object' && p.id && p.type);
+        const db=firebase.database();
+        dbRef=db.ref('quality-dashboard');
+        dbRef.child('projects').on('value',snap=>{
+          const data=snap.val();
+          if(data){
+            const vals=Object.values(data);
+            projects=vals.filter(p=>p&&typeof p==='object'&&p.id&&p.type);
           }
           render();
         });
-        fbConnected = true;
-        const bar = document.getElementById('fbBar');
-        bar.style.background = 'rgba(63,185,80,.08)';
-        bar.style.borderColor = 'rgba(63,185,80,.2)';
-        bar.style.color = 'var(--green)';
-        document.getElementById('fbStatus').textContent = 'Firebase 연결됨 — 실시간 팀 공유 활성화';
-        document.querySelector('.setup-btn').style.display = 'none';
-      } catch(e) { console.error('Firebase 연결 실패:', e); }
+        const bar=document.getElementById('statusBar');
+        bar.className='status-bar connected';
+        bar.textContent='✓ Firebase 연결됨 — 실시간 팀 공유 활성화';
+      }catch(e){
+        document.getElementById('statusBar').textContent='Firebase 연결 실패: '+e.message;
+      }
     };
-    document.head.appendChild(script2);
+    document.head.appendChild(s2);
   };
-  document.head.appendChild(script1);
+  document.head.appendChild(s1);
 }
-
-function connectFirebase() { closeFbModal(); }
 
 render();
 initFirebase();
