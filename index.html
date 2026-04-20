@@ -11,26 +11,21 @@
   --bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--bg4:#21262d;
   --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
   --text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
-  --accent:#2f81f7;--green:#3fb950;--yellow:#d29922;--red:#f85149;
+  --accent:#2f81f7;--green:#3fb950;--yellow:#d29922;--red:#f85149;--purple:#a371f7;
   --font-d:'Rajdhani',sans-serif;--font-b:'Noto Sans KR',sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100vh;display:flex}
-
-/* SIDEBAR */
 .sidebar{width:200px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:10}
 .logo{padding:18px 18px 14px;border-bottom:1px solid var(--border)}
 .logo-t{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--accent);letter-spacing:2px}
 .logo-s{font-size:10px;color:var(--text3);letter-spacing:3px;margin-top:1px}
 .nav{flex:1;padding:10px 0}
-.ni{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:13px;color:var(--text2);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:13px;color:var(--text2);cursor:pointer;border-left:2px solid transparent;transition:all .15s;user-select:none}
 .ni:hover{color:var(--text);background:rgba(255,255,255,.03)}
 .ni.active{color:var(--accent);background:rgba(47,129,247,.08);border-left-color:var(--accent)}
 .user-box{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px}
 .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#a371f7);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
-.u-name{font-size:12px;font-weight:500}
-.u-role{font-size:10px;color:var(--text3)}
-
-/* MAIN */
+.u-name{font-size:12px;font-weight:500}.u-role{font-size:10px;color:var(--text3)}
 .main{margin-left:200px;flex:1;display:flex;flex-direction:column}
 .topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:9}
 .tb-title{font-family:var(--font-d);font-size:18px;font-weight:700;letter-spacing:2px}
@@ -42,80 +37,56 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
 .live-badge{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.2);padding:3px 9px;border-radius:20px}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-
-.content{padding:18px;display:flex;flex-direction:column;gap:16px}
-
-/* STATUS BAR */
+.page{display:none;padding:18px;flex-direction:column;gap:16px}
+.page.active{display:flex}
 .status-bar{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;font-size:11px;border:1px solid rgba(210,153,34,.2);background:rgba(210,153,34,.08);color:var(--yellow)}
 .status-bar.connected{border-color:rgba(63,185,80,.2);background:rgba(63,185,80,.08);color:var(--green)}
-
-/* KPI */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.kpi.blue::before{background:var(--accent)}
-.kpi.red::before{background:var(--red)}
-.kpi.green::before{background:var(--green)}
-.kpi.yellow::before{background:var(--yellow)}
+.kpi.blue::before{background:var(--accent)}.kpi.red::before{background:var(--red)}.kpi.green::before{background:var(--green)}.kpi.yellow::before{background:var(--yellow)}
 .kpi-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
 .kpi-num{font-family:var(--font-d);font-size:36px;font-weight:700;line-height:1}
-.kpi.blue .kpi-num{color:var(--accent)}
-.kpi.red .kpi-num{color:var(--red)}
-.kpi.green .kpi-num{color:var(--green)}
-.kpi.yellow .kpi-num{color:var(--yellow)}
+.kpi.blue .kpi-num{color:var(--accent)}.kpi.red .kpi-num{color:var(--red)}.kpi.green .kpi-num{color:var(--green)}.kpi.yellow .kpi-num{color:var(--yellow)}
 .kpi-sub{font-size:10px;color:var(--text3);margin-top:4px}
-
-/* BODY */
 .body-grid{display:grid;grid-template-columns:1fr 280px;gap:16px}
-
-/* CARD */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .card-title{font-family:var(--font-d);font-size:15px;font-weight:600;letter-spacing:1px;display:flex;align-items:center;gap:8px}
 .card-title::before{content:'';display:inline-block;width:3px;height:14px;background:var(--accent);border-radius:2px}
 .filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .fc{padding:4px 10px;font-size:11px;border-radius:20px;border:1px solid var(--border);color:var(--text3);cursor:pointer;background:transparent;font-family:var(--font-b);transition:all .15s}
-.fc:hover{border-color:var(--border2);color:var(--text)}
-.fc.on{background:rgba(47,129,247,.15);border-color:var(--accent);color:var(--accent)}
+.fc:hover{border-color:var(--border2);color:var(--text)}.fc.on{background:rgba(47,129,247,.15);border-color:var(--accent);color:var(--accent)}
 .add-btn{padding:5px 12px;font-size:11px;border-radius:6px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:var(--font-b);font-weight:500}
-
-/* ADD FORM - inline, no modal */
 .add-form{background:var(--bg3);border-bottom:1px solid var(--border);padding:14px 18px;display:none}
 .add-form.open{display:block}
-.form-grid{display:grid;grid-template-columns:repeat(5,1fr) auto;gap:10px;align-items:end}
+.form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
 .fg label{display:block;font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 .fg input,.fg select{width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none}
 .fg input:focus,.fg select:focus{border-color:var(--accent)}
 .fg select option{background:var(--bg2)}
 .save-btn{padding:7px 16px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:500;white-space:nowrap}
 .cancel-btn{padding:7px 12px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:var(--font-b);font-size:12px;margin-left:6px}
-
-/* TABLE */
 .proj-table{width:100%;border-collapse:collapse}
 .proj-table th{font-size:10px;color:var(--text3);font-weight:400;letter-spacing:1px;text-transform:uppercase;padding:9px 18px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg3)}
 .proj-row{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
 .proj-row:hover{background:rgba(255,255,255,.02)}
-.proj-row:last-child{border-bottom:none}
 .proj-row.missing{border-left:2px solid var(--red)}
-.pc{padding:12px 18px;font-size:12px}
+.pc{padding:11px 18px;font-size:12px}
 .pno{color:var(--text3);font-family:var(--font-d);font-weight:600}
-.pname{font-weight:500;color:var(--text)}
-.psub{font-size:10px;color:var(--text3);margin-top:2px}
-
+.pname{font-weight:500;color:var(--text)}.psub{font-size:10px;color:var(--text3);margin-top:2px}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
 .badge::before{content:'';width:4px;height:4px;border-radius:50%}
 .b-prog{background:rgba(47,129,247,.15);color:var(--accent);border:1px solid rgba(47,129,247,.25)}.b-prog::before{background:var(--accent)}
 .b-delay{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.25)}.b-delay::before{background:var(--red)}
 .b-ok{background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.25)}.b-ok::before{background:var(--green)}
 .b-wait{background:rgba(210,153,34,.15);color:var(--yellow);border:1px solid rgba(210,153,34,.25)}.b-wait::before{background:var(--yellow)}
+.b-done{background:rgba(163,113,247,.15);color:var(--purple);border:1px solid rgba(163,113,247,.25)}.b-done::before{background:var(--purple)}
 .b-type{background:var(--bg4);color:var(--text2);border:1px solid var(--border);font-size:10px}
-
 .prog-wrap{display:flex;align-items:center;gap:8px}
 .prog-bg{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
 .prog-fill{height:100%;border-radius:2px;transition:width .3s}
 .prog-pct{font-size:10px;color:var(--text3);min-width:26px;text-align:right;font-family:var(--font-d)}
-
-/* CHECKLIST EXPAND */
 .chk-expand{background:var(--bg3);border-top:1px solid var(--border);display:none}
 .chk-expand.open{display:block}
 .chk-grid{display:flex;flex-wrap:wrap;gap:5px;padding:12px 18px}
@@ -123,50 +94,84 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
 .chk-tag:hover{border-color:var(--border2)}
 .chk-tag.done{background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.3);color:var(--green)}
 .miss-bar{margin:0 18px 12px;padding:6px 10px;border-radius:5px;background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.2);font-size:11px;color:var(--red)}
-
-/* RIGHT */
-.right-col{display:flex;flex-direction:column;gap:14px}
+.row-actions{display:flex;gap:6px}
+.act-btn{padding:3px 10px;font-size:10px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;font-family:var(--font-b);transition:all .12s}
+.act-btn:hover{border-color:var(--border2);color:var(--text)}
+.act-btn.del:hover{border-color:var(--red);color:var(--red)}
+.act-btn.edit:hover{border-color:var(--accent);color:var(--accent)}
 .notice-item{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;cursor:pointer}
 .notice-item:hover{background:rgba(255,255,255,.02)}
 .notice-item:last-child{border-bottom:none}
 .ndot{width:5px;height:5px;border-radius:50%;margin-top:5px;flex-shrink:0}
 .ndot.r{background:var(--red)}.ndot.y{background:var(--yellow)}.ndot.b{background:var(--accent)}
-.ntxt{font-size:12px;font-weight:500}
-.nsub{font-size:10px;color:var(--text3);margin-top:2px}
+.ntxt{font-size:12px;font-weight:500}.nsub{font-size:10px;color:var(--text3);margin-top:2px}
 .nd{font-size:10px;color:var(--text3);margin-left:auto;white-space:nowrap}
 .lib-card{background:linear-gradient(135deg,#1a3a6e,#1e1b4b);border:1px solid rgba(47,129,247,.25);border-radius:10px;padding:18px 16px}
 .lib-tag{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
 .lib-title{font-size:14px;font-weight:500;color:#fff;line-height:1.4;margin-bottom:14px}
-.lib-btn{padding:6px 14px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:var(--font-b)}
+.lib-btn{padding:6px 14px;background:var(--accent);color:#fff;border:none;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-b)}
 .empty{text-align:center;padding:28px;color:var(--text3);font-size:13px}
+/* 검증현황 */
+.verify-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.verify-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.vc-name{font-size:13px;font-weight:500;margin-bottom:4px}
+.vc-type{font-size:10px;color:var(--text3);margin-bottom:10px}
+.vc-items{display:flex;flex-direction:column;gap:4px}
+.vc-item{display:flex;align-items:center;justify-content:space-between;font-size:11px;padding:3px 0}
+.vc-item.done{color:var(--green)}.vc-item.miss{color:var(--text3)}
+.vc-check{font-size:11px}
+/* 이슈관리 */
+.issue-table{width:100%;border-collapse:collapse}
+.issue-table th{font-size:10px;color:var(--text3);font-weight:400;letter-spacing:1px;text-transform:uppercase;padding:9px 18px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg3)}
+.issue-row{border-bottom:1px solid var(--border);transition:background .12s}
+.issue-row:hover{background:rgba(255,255,255,.02)}
+.issue-form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+/* A/S */
+.as-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.as-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.as-card-title{font-size:13px;font-weight:500;margin-bottom:12px;color:var(--text)}
+/* 체크리스트 */
+.cl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cl-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.cl-type{font-family:var(--font-d);font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:12px;color:var(--accent)}
+.cl-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.cl-item:last-child{border-bottom:none}
+.cl-num{color:var(--text3);font-family:var(--font-d);width:18px;flex-shrink:0}
+/* BOM */
+.bom-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.bom-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border-radius:7px;border:1px solid var(--border);cursor:pointer;transition:border-color .12s}
+.bom-item:hover{border-color:var(--border2)}
+.bom-icon{font-size:20px;flex-shrink:0}
+.bom-name{font-size:12px;font-weight:500}.bom-sub{font-size:10px;color:var(--text3);margin-top:2px}
 </style>
 </head>
 <body>
 <aside class="sidebar">
   <div class="logo"><div class="logo-t">QUALITY</div><div class="logo-s">SI OPERATION</div></div>
   <nav class="nav">
-    <div class="ni active">▦ 대시보드 홈</div>
-    <div class="ni">◈ 프로젝트 관리</div>
-    <div class="ni">↗ 검증 현황</div>
-    <div class="ni">△ 이슈 관리</div>
-    <div class="ni">⚙ A/S 및 RMA</div>
-    <div class="ni">☑ 체크리스트</div>
-    <div class="ni">◻ BOM / 자료실</div>
+    <div class="ni active" onclick="goPage('dashboard',this)">▦ 대시보드 홈</div>
+    <div class="ni" onclick="goPage('projects',this)">◈ 프로젝트 관리</div>
+    <div class="ni" onclick="goPage('verify',this)">↗ 검증 현황</div>
+    <div class="ni" onclick="goPage('issue',this)">△ 이슈 관리</div>
+    <div class="ni" onclick="goPage('as',this)">⚙ A/S 및 RMA</div>
+    <div class="ni" onclick="goPage('checklist',this)">☑ 체크리스트</div>
+    <div class="ni" onclick="goPage('bom',this)">◻ BOM / 자료실</div>
   </nav>
   <div class="user-box"><div class="avatar">SW</div><div><div class="u-name">김승원 부장</div><div class="u-role">품질운영 총괄</div></div></div>
 </aside>
 
 <main class="main">
   <div class="topbar">
-    <div class="tb-title">DASHBOARD</div>
+    <div class="tb-title" id="pageTitle">DASHBOARD</div>
     <div class="tb-date" id="topDate"></div>
     <div class="tb-right">
-      <div class="search-wrap"><span style="color:var(--text3);font-size:12px">🔍</span><input placeholder="프로젝트 검색..." id="searchInput" oninput="renderTable()"></div>
+      <div class="search-wrap"><span style="color:var(--text3);font-size:12px">🔍</span><input placeholder="검색..." id="searchInput" oninput="renderTable()"></div>
       <div class="live-badge"><span class="live-dot"></span>LIVE</div>
     </div>
   </div>
 
-  <div class="content">
+  <!-- 대시보드 홈 -->
+  <div class="page active" id="page-dashboard">
     <div class="status-bar" id="statusBar">🔥 Firebase 연결 중...</div>
     <div class="kpi-grid" id="kpiGrid"></div>
     <div class="body-grid">
@@ -179,33 +184,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
             <button class="fc" data-f="신규개발" onclick="setFilter(this)">신규개발</button>
             <button class="fc" data-f="납품검사" onclick="setFilter(this)">납품검사</button>
             <button class="fc" data-f="missing" onclick="setFilter(this)">누락있음</button>
-            <button class="add-btn" onclick="toggleAddForm()">+ 추가</button>
-          </div>
-        </div>
-        <div class="add-form" id="addForm">
-          <div class="form-grid">
-            <div class="fg"><label>프로젝트명</label><input id="f-name" placeholder="예: AMC-HC20N 수입검사"></div>
-            <div class="fg"><label>유형</label><select id="f-type"><option value="4M변경">4M변경</option><option value="신규개발">신규개발/양산이관</option><option value="납품검사">납품검사/수입검사</option></select></div>
-            <div class="fg"><label>단계</label><select id="f-step"><option>EP 1</option><option>EP 2</option><option>MP READY</option><option>양산</option><option>수입검사</option><option>납품검사</option></select></div>
-            <div class="fg"><label>담당자</label><input id="f-owner" placeholder="홍길동"></div>
-            <div class="fg"><label>목표일</label><input id="f-due" type="date"></div>
-            <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveProject()">등록</button><button class="cancel-btn" onclick="toggleAddForm()">취소</button></div></div>
           </div>
         </div>
         <table class="proj-table">
           <thead><tr>
-            <th style="width:40px">NO</th>
-            <th>프로젝트명</th>
-            <th style="width:80px">유형</th>
-            <th style="width:90px">단계</th>
-            <th style="width:70px">상태</th>
-            <th style="width:140px">검증 진행률</th>
+            <th style="width:40px">NO</th><th>프로젝트명</th>
+            <th style="width:80px">유형</th><th style="width:90px">단계</th>
+            <th style="width:70px">상태</th><th style="width:140px">검증 진행률</th>
             <th style="width:95px">목표일</th>
           </tr></thead>
-          <tbody id="projTbody"></tbody>
+          <tbody id="dashTbody"></tbody>
         </table>
       </div>
-      <div class="right-col">
+      <div style="display:flex;flex-direction:column;gap:14px">
         <div class="card">
           <div class="card-header"><div class="card-title" style="font-size:12px">📅 Notice / Schedule</div></div>
           <div id="noticeList"></div>
@@ -213,11 +204,137 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
         <div class="lib-card">
           <div class="lib-tag">Internal Library</div>
           <div class="lib-title">표준 품질 양식 및<br>BOM 자료실 바로가기</div>
-          <button class="lib-btn">GO TO FOLDER →</button>
+          <button class="lib-btn" onclick="goPage('bom',document.querySelectorAll('.ni')[6])">GO TO FOLDER →</button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 프로젝트 관리 -->
+  <div class="page" id="page-projects">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">프로젝트 관리</div>
+        <div class="filters">
+          <button class="fc on" data-f="all" onclick="setFilter2(this)">전체</button>
+          <button class="fc" data-f="4M변경" onclick="setFilter2(this)">4M변경</button>
+          <button class="fc" data-f="신규개발" onclick="setFilter2(this)">신규개발</button>
+          <button class="fc" data-f="납품검사" onclick="setFilter2(this)">납품검사</button>
+          <button class="add-btn" onclick="toggleAddForm()">+ 프로젝트 추가</button>
+        </div>
+      </div>
+      <div class="add-form" id="addForm">
+        <div class="form-grid">
+          <div class="fg"><label>프로젝트명</label><input id="f-name" placeholder="예: AMC-HC20N 수입검사"></div>
+          <div class="fg"><label>유형</label><select id="f-type"><option value="4M변경">4M변경</option><option value="신규개발">신규개발/양산이관</option><option value="납품검사">납품검사/수입검사</option></select></div>
+          <div class="fg"><label>단계</label><select id="f-step"><option>EP 1</option><option>EP 2</option><option>MP READY</option><option>양산</option><option>수입검사</option><option>납품검사</option></select></div>
+          <div class="fg"><label>담당자</label><input id="f-owner" placeholder="홍길동"></div>
+          <div class="fg"><label>목표일</label><input id="f-due" type="date"></div>
+          <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveProject()">등록</button><button class="cancel-btn" onclick="toggleAddForm()">취소</button></div></div>
+        </div>
+      </div>
+      <table class="proj-table">
+        <thead><tr>
+          <th style="width:40px">NO</th><th>프로젝트명</th>
+          <th style="width:80px">유형</th><th style="width:90px">단계</th>
+          <th style="width:100px">상태</th><th style="width:130px">검증 진행률</th>
+          <th style="width:95px">목표일</th><th style="width:95px">담당자</th>
+          <th style="width:100px">관리</th>
+        </tr></thead>
+        <tbody id="projTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 검증 현황 -->
+  <div class="page" id="page-verify">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header"><div class="card-title">검증 현황</div></div>
+    </div>
+    <div class="verify-grid" id="verifyGrid"></div>
+  </div>
+
+  <!-- 이슈 관리 -->
+  <div class="page" id="page-issue">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">이슈 관리</div>
+        <button class="add-btn" onclick="toggleIssueForm()">+ 이슈 등록</button>
+      </div>
+      <div class="add-form" id="issueForm">
+        <div class="issue-form-grid">
+          <div class="fg"><label>이슈 내용</label><input id="i-title" placeholder="이슈 내용을 입력하세요"></div>
+          <div class="fg"><label>관련 프로젝트</label><select id="i-proj"></select></div>
+          <div class="fg"><label>심각도</label><select id="i-level"><option value="긴급">🔴 긴급</option><option value="일반" selected>🟡 일반</option><option value="개선">🔵 개선</option></select></div>
+          <div class="fg"><label>담당자</label><input id="i-owner" placeholder="홍길동"></div>
+          <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveIssue()">등록</button><button class="cancel-btn" onclick="toggleIssueForm()">취소</button></div></div>
+        </div>
+      </div>
+      <table class="issue-table">
+        <thead><tr>
+          <th style="width:40px">NO</th><th>이슈 내용</th>
+          <th style="width:120px">관련 프로젝트</th><th style="width:70px">심각도</th>
+          <th style="width:70px">상태</th><th style="width:80px">담당자</th>
+          <th style="width:110px">등록일</th><th style="width:80px">관리</th>
+        </tr></thead>
+        <tbody id="issueTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- A/S 및 RMA -->
+  <div class="page" id="page-as">
+    <div class="kpi-grid">
+      <div class="kpi blue"><div class="kpi-label">A/S 접수</div><div class="kpi-num" id="as-total">00</div><div class="kpi-sub">전체 접수 건수</div></div>
+      <div class="kpi yellow"><div class="kpi-label">처리 중</div><div class="kpi-num" id="as-prog">00</div><div class="kpi-sub">처리 진행 중</div></div>
+      <div class="kpi green"><div class="kpi-label">처리 완료</div><div class="kpi-num" id="as-done">00</div><div class="kpi-sub">완료 건수</div></div>
+      <div class="kpi red"><div class="kpi-label">RMA</div><div class="kpi-num" id="as-rma">00</div><div class="kpi-sub">반품/교환 건수</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">A/S 접수 현황</div>
+        <button class="add-btn" onclick="toggleAsForm()">+ A/S 등록</button>
+      </div>
+      <div class="add-form" id="asForm">
+        <div class="issue-form-grid">
+          <div class="fg"><label>고객사/제품</label><input id="as-customer" placeholder="예: HMC / RV-R3008"></div>
+          <div class="fg"><label>증상</label><input id="as-symptom" placeholder="증상 입력"></div>
+          <div class="fg"><label>유형</label><select id="as-type"><option value="유상">유상</option><option value="무상">무상</option><option value="RMA">RMA</option></select></div>
+          <div class="fg"><label>담당자</label><input id="as-owner" placeholder="홍길동"></div>
+          <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveAs()">등록</button><button class="cancel-btn" onclick="toggleAsForm()">취소</button></div></div>
+        </div>
+      </div>
+      <table class="issue-table">
+        <thead><tr>
+          <th style="width:40px">NO</th><th>고객사/제품</th>
+          <th style="width:150px">증상</th><th style="width:70px">유형</th>
+          <th style="width:70px">상태</th><th style="width:80px">담당자</th>
+          <th style="width:110px">접수일</th><th style="width:80px">관리</th>
+        </tr></thead>
+        <tbody id="asTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 체크리스트 -->
+  <div class="page" id="page-checklist">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header"><div class="card-title">체크리스트 템플릿</div></div>
+    </div>
+    <div class="cl-grid" id="clGrid"></div>
+  </div>
+
+  <!-- BOM / 자료실 -->
+  <div class="page" id="page-bom">
+    <div class="card">
+      <div class="card-header"><div class="card-title">BOM / 자료실</div></div>
+      <div style="padding:18px">
+        <div style="font-size:12px;color:var(--text3);margin-bottom:14px">표준 품질 양식 및 BOM 자료 링크를 관리합니다.</div>
+        <div class="bom-grid" id="bomGrid"></div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -226,32 +343,54 @@ const CHECKLISTS = {
   "신규개발":["요구사항 확인","사양서 검토","초기 샘플 검사","신뢰성 시험","양산 시료 검사","고객 승인","양산 이관 확인","이력 등록"],
   "납품검사":["수량 확인","외관 검사","기능 시험","치수 측정","성적서 확인","불량 처리","합격 판정","입고 등록"]
 };
-const STATUS_CLS = {"진행중":"b-prog","지연":"b-delay","정상":"b-ok","대기":"b-wait"};
-const FB_CONFIG = {
+const STATUS_CLS={"진행중":"b-prog","지연":"b-delay","정상":"b-ok","대기":"b-wait","완료":"b-done"};
+const STATUSES=["진행중","대기","지연","정상","완료"];
+const FB_CONFIG={
   apiKey:'AIzaSyCWEGzctMIcbgQwil4ZdCanZxZybHHrFu4',
   databaseURL:'https://qualitydash01-6a6ac-default-rtdb.asia-southeast1.firebasedatabase.app',
   projectId:'qualitydash01-6a6ac',
   appId:'1:282750403382:web:b6341635ab0b186fcc2997'
 };
-const NOTICES = [
+const NOTICES=[
   {c:'r',text:'연차 사용 계획 보고',sub:'금주 금요일까지 김승원 부장 보고',d:'D-1'},
   {c:'y',text:'이카운트 지출 결의',sub:'3월분 부서 비용 정산 완료 요청',d:'D-1'},
   {c:'b',text:'차세대 제독차 시연',sub:'현장 필드 시험 완료 보고회',d:'14:00'}
 ];
+const BOM_ITEMS=[
+  {icon:'📋',name:'수입검사 성적서',sub:'AMC-HC20N 외 표준 양식'},
+  {icon:'📊',name:'BOM 명세서 템플릿',sub:'HDS/RV3K 시리즈'},
+  {icon:'📝',name:'4M 변경 관리 양식',sub:'AIS-825 기준'},
+  {icon:'🔍',name:'품질 검사 기준서',sub:'제품별 검사 기준'},
+  {icon:'📦',name:'납품 성적서',sub:'고객사별 표준 양식'},
+  {icon:'⚙️',name:'Redmine 이슈 가이드',sub:'이슈 등록/관리 절차'}
+];
 
-let projects = [];
-let filter = 'all';
-let expandedId = null;
-let dbRef = null;
+let projects=[], issues=[], asItems=[], filter='all', filter2='all', expandedId=null, dbRef=null;
 
 // DATE
-const d = new Date();
-const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-document.getElementById('topDate').textContent = `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')}. (${days[d.getDay()]})`;
+const d=new Date(), days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+document.getElementById('topDate').textContent=`${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')}. (${days[d.getDay()]})`;
 
-function getPct(p){ const t=(CHECKLISTS[p.type]||[]).length||1; return Math.round(((p.done||[]).length/t)*100); }
-function getMissing(p){ return (CHECKLISTS[p.type]||[]).filter(c=>!(p.done||[]).includes(c)); }
+function getPct(p){const t=(CHECKLISTS[p.type]||[]).length||1;return Math.round(((p.done||[]).length/t)*100);}
+function getMissing(p){return (CHECKLISTS[p.type]||[]).filter(c=>!(p.done||[]).includes(c));}
+function today(){return new Date().toISOString().split('T')[0];}
 
+// PAGE NAV
+function goPage(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  const titles={dashboard:'DASHBOARD',projects:'프로젝트 관리',verify:'검증 현황',issue:'이슈 관리',as:'A/S 및 RMA',checklist:'체크리스트',bom:'BOM / 자료실'};
+  document.getElementById('pageTitle').textContent=titles[id]||id.toUpperCase();
+  if(id==='verify') renderVerify();
+  if(id==='checklist') renderChecklist();
+  if(id==='bom') renderBom();
+  if(id==='issue') renderIssues();
+  if(id==='as') renderAs();
+}
+
+// KPI
 function renderKPI(){
   const t=projects.length, miss=projects.filter(p=>getMissing(p).length>0).length;
   const avg=t?Math.round(projects.reduce((a,p)=>a+getPct(p),0)/t):0;
@@ -263,47 +402,156 @@ function renderKPI(){
     <div class="kpi yellow"><div class="kpi-label">지연 이슈</div><div class="kpi-num">${String(delay).padStart(2,'0')}</div><div class="kpi-sub">일정 지연 프로젝트</div></div>`;
 }
 
+// DASH TABLE
 function renderTable(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase();
   let list=projects.filter(p=>p&&p.id&&p.type);
   if(q) list=list.filter(p=>p.name.toLowerCase().includes(q)||(p.owner||'').toLowerCase().includes(q));
   if(filter==='missing') list=list.filter(p=>getMissing(p).length>0);
   else if(filter!=='all') list=list.filter(p=>p.type.startsWith(filter));
-  const tb=document.getElementById('projTbody');
-  if(!list.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty">프로젝트가 없습니다. + 추가 버튼으로 등록하세요.</div></td></tr>`;return;}
+  const tb=document.getElementById('dashTbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty">프로젝트가 없습니다.</div></td></tr>`;return;}
   tb.innerHTML=list.map((p,i)=>{
     const pct=getPct(p), miss=getMissing(p);
     const bc=pct===100?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
-    const chks=CHECKLISTS[p.type]||[];
-    const isOpen=expandedId===p.id;
-    const typeShort=p.type==='납품검사'?'납품검사':p.type==='신규개발'?'신규개발':p.type;
+    const chks=CHECKLISTS[p.type]||[], isOpen=expandedId===p.id;
     return `<tr class="proj-row${miss.length>0?' missing':''}" onclick="toggleExpand('${p.id}')">
       <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
       <td><div class="pc"><div class="pname">${p.name}</div><div class="psub">담당: ${p.owner||'미지정'}</div></div></td>
-      <td><div class="pc"><span class="badge b-type">${typeShort}</span></div></td>
+      <td><div class="pc"><span class="badge b-type">${p.type}</span></div></td>
       <td><div class="pc" style="font-size:12px;color:var(--text2)">${p.step||'-'}</div></td>
       <td><div class="pc"><span class="badge ${STATUS_CLS[p.status]||'b-wait'}">${p.status||'대기'}</span></div></td>
       <td><div class="pc"><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${bc}"></div></div><span class="prog-pct">${pct}%</span></div></div></td>
       <td><div class="pc" style="font-size:11px;color:var(--text3)">${p.due||'-'}</div></td>
     </tr>
-    <tr><td colspan="7" style="padding:0">
-      <div class="chk-expand${isOpen?' open':''}" id="cx-${p.id}">
-        ${miss.length>0?`<div class="miss-bar">⚠ 미완료 ${miss.length}건: ${miss.join(', ')}</div>`:''}
-        <div class="chk-grid">${chks.map(c=>`<div class="chk-tag${(p.done||[]).includes(c)?' done':''}" onclick="toggleCheck(event,'${p.id}','${c}')">${(p.done||[]).includes(c)?'✓ ':'○ '}${c}</div>`).join('')}</div>
-      </div>
-    </td></tr>`;
+    <tr><td colspan="7" style="padding:0"><div class="chk-expand${isOpen?' open':''}" id="cx-${p.id}">
+      ${miss.length>0?`<div class="miss-bar">⚠ 미완료 ${miss.length}건: ${miss.join(', ')}</div>`:''}
+      <div class="chk-grid">${chks.map(c=>`<div class="chk-tag${(p.done||[]).includes(c)?' done':''}" onclick="toggleCheck(event,'${p.id}','${c}')">${(p.done||[]).includes(c)?'✓ ':'○ '}${c}</div>`).join('')}</div>
+    </div></td></tr>`;
   }).join('');
 }
 
+// PROJ TABLE (관리 페이지)
+function renderProjTable(){
+  let list=projects.filter(p=>p&&p.id&&p.type);
+  if(filter2!=='all') list=list.filter(p=>p.type.startsWith(filter2));
+  const tb=document.getElementById('projTbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty">프로젝트가 없습니다. + 프로젝트 추가 버튼으로 등록하세요.</div></td></tr>`;return;}
+  tb.innerHTML=list.map((p,i)=>{
+    const pct=getPct(p);
+    const bc=pct===100?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
+    const statusOpts=STATUSES.map(s=>`<option value="${s}"${p.status===s?' selected':''}>${s}</option>`).join('');
+    return `<tr class="proj-row">
+      <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
+      <td><div class="pc"><div class="pname">${p.name}</div></div></td>
+      <td><div class="pc"><span class="badge b-type">${p.type}</span></div></td>
+      <td><div class="pc" style="font-size:12px;color:var(--text2)">${p.step||'-'}</div></td>
+      <td><div class="pc"><select style="background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:2px 6px;font-family:var(--font-b)" onchange="changeStatus('${p.id}',this.value)" onclick="event.stopPropagation()">${statusOpts}</select></div></td>
+      <td><div class="pc"><div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${bc}"></div></div><span class="prog-pct">${pct}%</span></div></div></td>
+      <td><div class="pc" style="font-size:11px;color:var(--text3)">${p.due||'-'}</div></td>
+      <td><div class="pc" style="font-size:12px">${p.owner||'-'}</div></td>
+      <td><div class="pc"><div class="row-actions">
+        <button class="act-btn del" onclick="deleteProject('${p.id}',event)">삭제</button>
+      </div></div></td>
+    </tr>`;
+  }).join('');
+}
+
+// VERIFY
+function renderVerify(){
+  const g=document.getElementById('verifyGrid');
+  if(!projects.length){g.innerHTML=`<div class="empty" style="grid-column:1/-1">프로젝트가 없습니다.</div>`;return;}
+  g.innerHTML=projects.filter(p=>p&&p.id&&p.type).map(p=>{
+    const chks=CHECKLISTS[p.type]||[], pct=getPct(p);
+    const bc=pct===100?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
+    return `<div class="verify-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div><div class="vc-name">${p.name}</div><div class="vc-type">${p.type} · ${p.step||'-'} · 담당: ${p.owner||'미지정'}</div></div>
+        <span class="badge ${STATUS_CLS[p.status]||'b-wait'}">${p.status||'대기'}</span>
+      </div>
+      <div class="prog-wrap" style="margin-bottom:10px"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${bc}"></div></div><span class="prog-pct">${pct}%</span></div>
+      <div class="vc-items">${chks.map(c=>{const done=(p.done||[]).includes(c);return `<div class="vc-item${done?' done':' miss'}"><span>${c}</span><span class="vc-check">${done?'✓':'○'}</span></div>`;}).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+// ISSUES
+function renderIssues(){
+  const tb=document.getElementById('issueTbody');
+  // 관련 프로젝트 드롭다운 업데이트
+  const sel=document.getElementById('i-proj');
+  sel.innerHTML=`<option value="">-- 선택 --</option>`+projects.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  if(!issues.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty">등록된 이슈가 없습니다.</div></td></tr>`;return;}
+  const levelColor={'긴급':'b-delay','일반':'b-wait','개선':'b-prog'};
+  const stColor={'오픈':'b-prog','처리중':'b-wait','완료':'b-ok'};
+  tb.innerHTML=issues.map((iss,i)=>{
+    const pName=projects.find(p=>p.id===iss.projId)?.name||'-';
+    return `<tr class="issue-row">
+      <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
+      <td><div class="pc" style="font-size:12px">${iss.title}</div></td>
+      <td><div class="pc" style="font-size:11px;color:var(--text2)">${pName}</div></td>
+      <td><div class="pc"><span class="badge ${levelColor[iss.level]||'b-wait'}">${iss.level}</span></div></td>
+      <td><div class="pc"><select style="background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:2px 6px;font-family:var(--font-b)" onchange="changeIssueStatus('${iss.id}',this.value)"><option${iss.status==='오픈'?' selected':''}>오픈</option><option${iss.status==='처리중'?' selected':''}>처리중</option><option${iss.status==='완료'?' selected':''}>완료</option></select></div></td>
+      <td><div class="pc" style="font-size:12px">${iss.owner||'-'}</div></td>
+      <td><div class="pc" style="font-size:11px;color:var(--text3)">${iss.date||'-'}</div></td>
+      <td><div class="pc"><button class="act-btn del" onclick="deleteIssue('${iss.id}')">삭제</button></div></td>
+    </tr>`;
+  }).join('');
+}
+
+// A/S
+function renderAs(){
+  const total=asItems.length, prog=asItems.filter(a=>a.status==='처리중').length;
+  const done=asItems.filter(a=>a.status==='완료').length, rma=asItems.filter(a=>a.type==='RMA').length;
+  document.getElementById('as-total').textContent=String(total).padStart(2,'0');
+  document.getElementById('as-prog').textContent=String(prog).padStart(2,'0');
+  document.getElementById('as-done').textContent=String(done).padStart(2,'0');
+  document.getElementById('as-rma').textContent=String(rma).padStart(2,'0');
+  const tb=document.getElementById('asTbody');
+  if(!asItems.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty">등록된 A/S 건이 없습니다.</div></td></tr>`;return;}
+  const typeColor={'유상':'b-wait','무상':'b-prog','RMA':'b-delay'};
+  tb.innerHTML=asItems.map((a,i)=>`<tr class="issue-row">
+    <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
+    <td><div class="pc" style="font-size:12px">${a.customer}</div></td>
+    <td><div class="pc" style="font-size:11px;color:var(--text2)">${a.symptom}</div></td>
+    <td><div class="pc"><span class="badge ${typeColor[a.type]||'b-wait'}">${a.type}</span></div></td>
+    <td><div class="pc"><select style="background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:2px 6px;font-family:var(--font-b)" onchange="changeAsStatus('${a.id}',this.value)"><option${a.status==='접수'?' selected':''}>접수</option><option${a.status==='처리중'?' selected':''}>처리중</option><option${a.status==='완료'?' selected':''}>완료</option></select></div></td>
+    <td><div class="pc" style="font-size:12px">${a.owner||'-'}</div></td>
+    <td><div class="pc" style="font-size:11px;color:var(--text3)">${a.date||'-'}</div></td>
+    <td><div class="pc"><button class="act-btn del" onclick="deleteAs('${a.id}')">삭제</button></div></td>
+  </tr>`).join('');
+}
+
+// CHECKLIST
+function renderChecklist(){
+  document.getElementById('clGrid').innerHTML=Object.entries(CHECKLISTS).map(([type,items])=>`
+    <div class="cl-card">
+      <div class="cl-type">${type}</div>
+      ${items.map((item,i)=>`<div class="cl-item"><span class="cl-num">${String(i+1).padStart(2,'0')}</span><span>${item}</span></div>`).join('')}
+    </div>`).join('');
+}
+
+// BOM
+function renderBom(){
+  document.getElementById('bomGrid').innerHTML=BOM_ITEMS.map(b=>`
+    <div class="bom-item">
+      <span class="bom-icon">${b.icon}</span>
+      <div><div class="bom-name">${b.name}</div><div class="bom-sub">${b.sub}</div></div>
+    </div>`).join('');
+}
+
+// NOTICES
 function renderNotices(){
   document.getElementById('noticeList').innerHTML=NOTICES.map(n=>`
     <div class="notice-item"><div class="ndot ${n.c}"></div><div><div class="ntxt">${n.text}</div><div class="nsub">${n.sub}</div></div><div class="nd">${n.d}</div></div>`).join('');
 }
 
-function render(){renderKPI();renderTable();renderNotices();}
+function render(){renderKPI();renderTable();renderProjTable();renderNotices();}
 
+// EXPAND
 function toggleExpand(id){expandedId=expandedId===id?null:id;renderTable();}
 
+// CHECK
 function toggleCheck(e,pid,chk){
   e.stopPropagation();
   const p=projects.find(x=>x.id===pid);if(!p)return;
@@ -314,35 +562,92 @@ function toggleCheck(e,pid,chk){
   render();
 }
 
-function setFilter(btn){
-  document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');filter=btn.dataset.f;renderTable();
-}
+// FILTER
+function setFilter(btn){document.querySelectorAll('#page-dashboard .fc').forEach(b=>b.classList.remove('on'));btn.classList.add('on');filter=btn.dataset.f;renderTable();}
+function setFilter2(btn){document.querySelectorAll('#page-projects .fc').forEach(b=>b.classList.remove('on'));btn.classList.add('on');filter2=btn.dataset.f;renderProjTable();}
 
-function toggleAddForm(){
-  const f=document.getElementById('addForm');
-  f.classList.toggle('open');
-}
+// ADD FORM
+function toggleAddForm(){const f=document.getElementById('addForm');f.classList.toggle('open');}
+function toggleIssueForm(){const f=document.getElementById('issueForm');f.classList.toggle('open');}
+function toggleAsForm(){const f=document.getElementById('asForm');f.classList.toggle('open');}
 
+// SAVE PROJECT
 function saveProject(){
   const name=document.getElementById('f-name').value.trim();
   if(!name){alert('프로젝트명을 입력해주세요');return;}
-  const p={
-    id:'p'+Date.now(),name,
-    type:document.getElementById('f-type').value,
-    step:document.getElementById('f-step').value,
-    owner:document.getElementById('f-owner').value.trim(),
-    due:document.getElementById('f-due').value,
-    status:'진행중',done:[]
-  };
+  const p={id:'p'+Date.now(),name,type:document.getElementById('f-type').value,step:document.getElementById('f-step').value,owner:document.getElementById('f-owner').value.trim(),due:document.getElementById('f-due').value,status:'진행중',done:[]};
   projects.push(p);
   if(dbRef)dbRef.child('projects/'+p.id).set(p);
-  document.getElementById('f-name').value='';
-  document.getElementById('f-owner').value='';
+  document.getElementById('f-name').value='';document.getElementById('f-owner').value='';
   document.getElementById('addForm').classList.remove('open');
   render();
 }
 
+// DELETE PROJECT
+function deleteProject(id,e){
+  e.stopPropagation();
+  if(!confirm('프로젝트를 삭제하시겠습니까?'))return;
+  projects=projects.filter(p=>p.id!==id);
+  if(dbRef)dbRef.child('projects/'+id).remove();
+  render();
+}
+
+// STATUS CHANGE
+function changeStatus(id,val){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  p.status=val;
+  if(dbRef)dbRef.child('projects/'+id+'/status').set(val);
+  renderKPI();renderTable();
+}
+
+// SAVE ISSUE
+function saveIssue(){
+  const title=document.getElementById('i-title').value.trim();
+  if(!title){alert('이슈 내용을 입력해주세요');return;}
+  const iss={id:'i'+Date.now(),title,projId:document.getElementById('i-proj').value,level:document.getElementById('i-level').value,owner:document.getElementById('i-owner').value.trim(),status:'오픈',date:today()};
+  issues.push(iss);
+  if(dbRef)dbRef.child('issues/'+iss.id).set(iss);
+  document.getElementById('i-title').value='';document.getElementById('i-owner').value='';
+  document.getElementById('issueForm').classList.remove('open');
+  renderIssues();
+}
+function deleteIssue(id){
+  if(!confirm('이슈를 삭제하시겠습니까?'))return;
+  issues=issues.filter(i=>i.id!==id);
+  if(dbRef)dbRef.child('issues/'+id).remove();
+  renderIssues();
+}
+function changeIssueStatus(id,val){
+  const iss=issues.find(i=>i.id===id);if(!iss)return;
+  iss.status=val;
+  if(dbRef)dbRef.child('issues/'+id+'/status').set(val);
+}
+
+// SAVE A/S
+function saveAs(){
+  const customer=document.getElementById('as-customer').value.trim();
+  if(!customer){alert('고객사/제품을 입력해주세요');return;}
+  const a={id:'a'+Date.now(),customer,symptom:document.getElementById('as-symptom').value.trim(),type:document.getElementById('as-type').value,owner:document.getElementById('as-owner').value.trim(),status:'접수',date:today()};
+  asItems.push(a);
+  if(dbRef)dbRef.child('as/'+a.id).set(a);
+  document.getElementById('as-customer').value='';document.getElementById('as-symptom').value='';document.getElementById('as-owner').value='';
+  document.getElementById('asForm').classList.remove('open');
+  renderAs();
+}
+function deleteAs(id){
+  if(!confirm('A/S 건을 삭제하시겠습니까?'))return;
+  asItems=asItems.filter(a=>a.id!==id);
+  if(dbRef)dbRef.child('as/'+id).remove();
+  renderAs();
+}
+function changeAsStatus(id,val){
+  const a=asItems.find(x=>x.id===id);if(!a)return;
+  a.status=val;
+  if(dbRef)dbRef.child('as/'+id+'/status').set(val);
+  renderAs();
+}
+
+// FIREBASE
 function initFirebase(){
   const s1=document.createElement('script');
   s1.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
@@ -356,17 +661,22 @@ function initFirebase(){
         dbRef=db.ref('quality-dashboard');
         dbRef.child('projects').on('value',snap=>{
           const data=snap.val();
-          if(data){
-            const vals=Object.values(data);
-            projects=vals.filter(p=>p&&typeof p==='object'&&p.id&&p.type);
-          }
+          projects=data?Object.values(data).filter(p=>p&&p.id&&p.type):[];
           render();
+        });
+        dbRef.child('issues').on('value',snap=>{
+          const data=snap.val();
+          issues=data?Object.values(data).filter(i=>i&&i.id):[];
+        });
+        dbRef.child('as').on('value',snap=>{
+          const data=snap.val();
+          asItems=data?Object.values(data).filter(a=>a&&a.id):[];
         });
         const bar=document.getElementById('statusBar');
         bar.className='status-bar connected';
         bar.textContent='✓ Firebase 연결됨 — 실시간 팀 공유 활성화';
       }catch(e){
-        document.getElementById('statusBar').textContent='Firebase 연결 실패: '+e.message;
+        document.getElementById('statusBar').textContent='⚠ Firebase 연결 실패: '+e.message;
       }
     };
     document.head.appendChild(s2);
