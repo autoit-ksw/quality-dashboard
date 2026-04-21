@@ -210,7 +210,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
       </div>
       <div style="display:flex;flex-direction:column;gap:14px">
         <div class="card">
-          <div class="card-header"><div class="card-title" style="font-size:12px">📅 Notice / Schedule</div></div>
+          <div class="card-header">
+            <div class="card-title" style="font-size:12px">📅 Notice / Schedule</div>
+            <button class="add-btn" style="font-size:10px;padding:3px 8px" onclick="openNoticeForm()">+ 추가</button>
+          </div>
           <div id="noticeList"></div>
         </div>
         <div class="lib-card">
@@ -317,6 +320,23 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
 
   <!-- A/S 및 RMA -->
   <div class="page" id="page-as">
+    <!-- Google Sheets 연동 섹션 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Google Sheets 연동</div>
+        <button class="add-btn" onclick="toggleSheetsForm()">+ Sheets 추가</button>
+      </div>
+      <div class="add-form" id="sheetsForm">
+        <div style="display:grid;grid-template-columns:2fr 3fr auto;gap:10px;align-items:end;padding:4px 0">
+          <div class="fg"><label>시트 이름</label><input id="sh-name" placeholder="예: A/S 접수 대장 2026"></div>
+          <div class="fg"><label>Google Sheets URL</label><input id="sh-url" placeholder="https://docs.google.com/spreadsheets/..."></div>
+          <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveSheet()">등록</button><button class="cancel-btn" onclick="toggleSheetsForm()">취소</button></div></div>
+        </div>
+      </div>
+      <div style="padding:12px 18px" id="sheetsList">
+        <div class="empty" style="padding:16px">등록된 Sheets가 없습니다. + Sheets 추가 버튼으로 등록하세요.</div>
+      </div>
+    </div>
     <div class="kpi-grid">
       <div class="kpi blue"><div class="kpi-label">A/S 접수</div><div class="kpi-num" id="as-total">00</div><div class="kpi-sub">전체 접수 건수</div></div>
       <div class="kpi yellow"><div class="kpi-label">처리 중</div><div class="kpi-num" id="as-prog">00</div><div class="kpi-sub">처리 진행 중</div></div>
@@ -444,11 +464,7 @@ const FB_CONFIG={
   projectId:'qualitydash01-6a6ac',
   appId:'1:282750403382:web:b6341635ab0b186fcc2997'
 };
-const NOTICES=[
-  {c:'r',text:'연차 사용 계획 보고',sub:'금주 금요일까지 김승원 부장 보고',d:'D-1'},
-  {c:'y',text:'이카운트 지출 결의',sub:'3월분 부서 비용 정산 완료 요청',d:'D-1'},
-  {c:'b',text:'차세대 제독차 시연',sub:'현장 필드 시험 완료 보고회',d:'14:00'}
-];
+let notices=[], sheets=[];
 const BOM_ITEMS=[
   {icon:'📋',name:'수입검사 성적서',sub:'AMC-HC20N 외 표준 양식'},
   {icon:'📊',name:'BOM 명세서 템플릿',sub:'HDS/RV3K 시리즈'},
@@ -545,7 +561,10 @@ function renderProjTable(){
     const statusOpts=STATUSES.map(s=>`<option value="${s}"${p.status===s?' selected':''}>${s}</option>`).join('');
     return `<tr class="proj-row">
       <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
-      <td><div class="pc"><div class="pname">${p.name}</div></div></td>
+      <td><div class="pc">
+        <div class="pname" contenteditable="true" onblur="editProjectField('${p.id}','name',this.textContent)" onclick="event.stopPropagation()">${p.name}</div>
+        <div class="psub" contenteditable="true" onblur="editProjectField('${p.id}','owner',this.textContent)" onclick="event.stopPropagation()" style="color:var(--text3);font-size:10px">${p.owner||'담당자 입력'}</div>
+      </div></td>
       <td><div class="pc"><span class="badge b-type">${p.type}</span></div></td>
       <td><div class="pc" style="font-size:12px;color:var(--text2)">${p.step||'-'}</div></td>
       <td><div class="pc"><select style="background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:2px 6px;font-family:var(--font-b)" onchange="changeStatus('${p.id}',this.value)" onclick="event.stopPropagation()">${statusOpts}</select></div></td>
@@ -642,7 +661,7 @@ function renderIssues(){
     const pName=projects.find(p=>p.id===iss.projId)?.name||'-';
     return `<tr class="issue-row">
       <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
-      <td><div class="pc" style="font-size:12px">${iss.title}</div></td>
+      <td><div class="pc"><div style="font-size:12px" contenteditable="true" onblur="editIssueField('${iss.id}','title',this.textContent)">${iss.title}</div></div></td>
       <td><div class="pc" style="font-size:11px;color:var(--text2)">${pName}</div></td>
       <td><div class="pc"><span class="badge ${levelColor[iss.level]||'b-wait'}">${iss.level}</span></div></td>
       <td><div class="pc"><select style="background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:2px 6px;font-family:var(--font-b)" onchange="changeIssueStatus('${iss.id}',this.value)"><option${iss.status==='오픈'?' selected':''}>오픈</option><option${iss.status==='처리중'?' selected':''}>처리중</option><option${iss.status==='완료'?' selected':''}>완료</option></select></div></td>
@@ -651,6 +670,52 @@ function renderIssues(){
       <td><div class="pc"><button class="act-btn del" onclick="deleteIssue('${iss.id}')">삭제</button></div></td>
     </tr>`;
   }).join('');
+}
+
+// SHEETS
+function toggleSheetsForm(){document.getElementById('sheetsForm').classList.toggle('open');}
+
+function saveSheet(){
+  const name=document.getElementById('sh-name').value.trim();
+  const url=document.getElementById('sh-url').value.trim();
+  if(!name||!url){alert('시트 이름과 URL을 입력해주세요');return;}
+  const s={id:'sh'+Date.now(),name,url};
+  sheets.push(s);
+  if(dbRef)dbRef.child('sheets/'+s.id).set(s);
+  document.getElementById('sh-name').value='';
+  document.getElementById('sh-url').value='';
+  document.getElementById('sheetsForm').classList.remove('open');
+  renderSheets();
+}
+
+function deleteSheet(id){
+  if(!confirm('삭제하시겠습니까?'))return;
+  sheets=sheets.filter(s=>s.id!==id);
+  if(dbRef)dbRef.child('sheets/'+id).remove();
+  renderSheets();
+}
+
+function renderSheets(){
+  const el=document.getElementById('sheetsList');
+  if(!el)return;
+  if(!sheets.length){
+    el.innerHTML=`<div class="empty" style="padding:16px">등록된 Sheets가 없습니다. + Sheets 추가 버튼으로 등록하세요.</div>`;
+    return;
+  }
+  el.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">
+    ${sheets.map(s=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border-radius:7px;border:1px solid var(--border);cursor:pointer" onclick="window.open('${s.url}','_blank')">
+        <span style="font-size:20px">📊</span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500;color:var(--accent)">${s.name}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.url}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="act-btn edit" style="font-size:10px;padding:3px 10px" onclick="event.stopPropagation();window.open('${s.url}','_blank')">열기</button>
+          <button class="act-btn del" style="font-size:10px;padding:3px 10px" onclick="event.stopPropagation();deleteSheet('${s.id}')">삭제</button>
+        </div>
+      </div>`).join('')}
+  </div>`;
 }
 
 // A/S
@@ -743,7 +808,7 @@ function renderBom(){
     return `<div class="bom-item" onclick="openBomDetail('${b.id}')" style="cursor:pointer">
       <span class="bom-icon">${b.icon}</span>
       <div style="flex:1">
-        <div class="bom-name">${b.name}</div>
+        <div class="bom-name" contenteditable="true" onblur="editBomName('${b.id}',this.textContent)" onclick="event.stopPropagation()">${b.name}</div>
         <div class="bom-sub">${linkCount>0?'🔗 '+linkCount+'개 파일':'파일 없음 — 클릭하여 추가'}</div>
       </div>
       <span style="color:var(--text3);font-size:16px">›</span>
@@ -787,6 +852,13 @@ function renderBomDetail(id){
   </div>`;
 }
 
+function editBomName(id,val){
+  let item=bomItems.find(b=>b.id===id);
+  if(!item){const def=DEFAULT_BOM.find(b=>b.id===id);if(def){item={...def};bomItems.push(item);}}
+  if(!item)return;
+  item.name=val.trim();
+  if(dbRef)dbRef.child('bom/'+id+'/name').set(val.trim());
+}
 function toggleBomForm(){document.getElementById('bomForm').classList.toggle('open');}
 
 function saveBomItem(){
@@ -856,8 +928,68 @@ function saveBomLink(){
 }
 // NOTICES
 function renderNotices(){
-  document.getElementById('noticeList').innerHTML=NOTICES.map(n=>`
-    <div class="notice-item"><div class="ndot ${n.c}"></div><div><div class="ntxt">${n.text}</div><div class="nsub">${n.sub}</div></div><div class="nd">${n.d}</div></div>`).join('');
+  const el=document.getElementById('noticeList');
+  if(!notices.length){
+    el.innerHTML=`<div style="padding:14px 16px;font-size:11px;color:var(--text3);text-align:center">등록된 공지가 없습니다.<br>+ 추가 버튼으로 등록하세요.</div>`;
+    return;
+  }
+  el.innerHTML=notices.map((n,i)=>`
+    <div class="notice-item" style="align-items:flex-start">
+      <div class="ndot ${n.c||'b'}" style="margin-top:4px"></div>
+      <div style="flex:1">
+        <div class="ntxt" contenteditable="true" onblur="editNotice(${i},'text',this.textContent)">${n.text}</div>
+        <div class="nsub" contenteditable="true" onblur="editNotice(${i},'sub',this.textContent)">${n.sub||''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <div class="nd" contenteditable="true" onblur="editNotice(${i},'d',this.textContent)" style="min-width:36px;text-align:right">${n.d||''}</div>
+        <button class="act-btn del" style="font-size:9px;padding:1px 6px" onclick="deleteNotice(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function editNotice(i,field,val){
+  if(!notices[i])return;
+  notices[i][field]=val.trim();
+  if(dbRef)dbRef.child('notices/'+i).set(notices[i]);
+}
+function deleteNotice(i){
+  notices.splice(i,1);
+  if(dbRef)dbRef.child('notices').set(notices.length?notices:null);
+  renderNotices();
+}
+let noticeFormOpen=false;
+function openNoticeForm(){
+  if(noticeFormOpen)return;
+  noticeFormOpen=true;
+  const el=document.getElementById('noticeList');
+  const form=document.createElement('div');
+  form.style.cssText='padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg3)';
+  form.innerHTML=`<div style="display:grid;grid-template-columns:auto 1fr 1fr auto auto;gap:8px;align-items:center">
+    <select id="nc-color" style="background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:11px;padding:4px 6px;font-family:var(--font-b)">
+      <option value="r">🔴</option><option value="y">🟡</option><option value="b">🔵</option>
+    </select>
+    <input id="nc-text" placeholder="제목" style="padding:5px 8px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none">
+    <input id="nc-sub" placeholder="내용" style="padding:5px 8px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none">
+    <input id="nc-d" placeholder="D-1" style="width:50px;padding:5px 8px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none">
+    <div style="display:flex;gap:4px">
+      <button class="save-btn" style="font-size:10px;padding:4px 10px" onclick="saveNotice()">추가</button>
+      <button class="cancel-btn" style="font-size:10px;padding:4px 8px" onclick="cancelNoticeForm()">취소</button>
+    </div>
+  </div>`;
+  el.prepend(form);
+}
+function cancelNoticeForm(){
+  noticeFormOpen=false;
+  renderNotices();
+}
+function saveNotice(){
+  const text=document.getElementById('nc-text').value.trim();
+  if(!text){alert('제목을 입력해주세요');return;}
+  const n={c:document.getElementById('nc-color').value,text,sub:document.getElementById('nc-sub').value.trim(),d:document.getElementById('nc-d').value.trim()};
+  notices.push(n);
+  if(dbRef)dbRef.child('notices').set(notices);
+  noticeFormOpen=false;
+  renderNotices();
 }
 
 function render(){renderKPI();renderTable();renderProjTable();renderNotices();}
@@ -941,12 +1073,26 @@ function deleteProject(id,e){
   render();
 }
 
+// INLINE EDIT
+function editProjectField(id,field,val){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  p[field]=val.trim();
+  if(dbRef)dbRef.child('projects/'+id+'/'+field).set(val.trim());
+  renderKPI();renderTable();
+}
+
 // STATUS CHANGE
 function changeStatus(id,val){
   const p=projects.find(x=>x.id===id);if(!p)return;
   p.status=val;
   if(dbRef)dbRef.child('projects/'+id+'/status').set(val);
   renderKPI();renderTable();
+}
+
+function editIssueField(id,field,val){
+  const iss=issues.find(x=>x.id===id);if(!iss)return;
+  iss[field]=val.trim();
+  if(dbRef)dbRef.child('issues/'+id+'/'+field).set(val.trim());
 }
 
 // SAVE ISSUE
@@ -1057,9 +1203,19 @@ function initFirebase(){
           const data=snap.val();
           bomItems=data?Object.values(data).filter(b=>b&&b.id):[];
         });
+        dbRef.child('sheets').on('value',snap=>{
+          const data=snap.val();
+          sheets=data?Object.values(data).filter(s=>s&&s.id):[];
+          renderSheets();
+        });
         dbRef.child('clFiles').on('value',snap=>{
           const data=snap.val();
           clFiles=data||{};
+        });
+        dbRef.child('notices').on('value',snap=>{
+          const data=snap.val();
+          notices=data?Object.values(data).filter(n=>n&&n.text):[];
+          renderNotices();
         });
         const bar=document.getElementById('statusBar');
         bar.className='status-bar connected';
