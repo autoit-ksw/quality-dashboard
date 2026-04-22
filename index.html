@@ -220,119 +220,100 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
   <div class="page active" id="page-dashboard">
     <div class="status-bar" id="statusBar">🔥 Firebase 연결 중...</div>
 
-    <!-- 상단 2열 -->
+    <!-- 상단 2열: 프로젝트 차트 + 이슈 현황 -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-      <!-- EP/MP 신규 모델 현황 -->
+
+      <!-- 프로젝트 관리 진행 현황 차트 -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title" style="font-size:13px">EP/MP 신규 모델 현황</div>
+          <div class="card-title" style="font-size:13px">프로젝트 관리 진행 현황</div>
           <button class="act-btn" style="font-size:11px;padding:3px 10px" onclick="goPage('projects',document.querySelectorAll('.ni')[1])">전체보기</button>
         </div>
-        <table class="proj-table">
-          <thead><tr>
-            <th>모델명</th><th style="width:80px">단계</th>
-            <th style="width:70px">상태</th><th style="width:95px">목표일</th>
-          </tr></thead>
-          <tbody id="dashMiniTbody"></tbody>
-        </table>
-      </div>
-      <!-- 금월 A/S 및 RMA 현황 -->
-      <div class="card">
-        <div class="card-header"><div class="card-title" style="font-size:13px">금월 A/S 및 RMA 현황</div></div>
-        <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
-          <div style="background:var(--bg3);border-radius:8px;padding:14px;text-align:center;border:1px solid var(--border)">
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">A/S 접수</div>
-            <div style="font-family:var(--font-d);font-size:32px;font-weight:700;color:var(--accent)" id="dash-as-total">00</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:4px">건</div>
-          </div>
-          <div style="background:var(--bg3);border-radius:8px;padding:14px;text-align:center;border:1px solid rgba(248,81,73,.2)">
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">RMA 진행 중</div>
-            <div style="font-family:var(--font-d);font-size:32px;font-weight:700;color:var(--red)" id="dash-rma-total">00</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:4px">건</div>
-          </div>
-          <div style="background:var(--bg3);border-radius:8px;padding:14px;text-align:center;border:1px solid rgba(63,185,80,.2)">
-            <div style="font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">RMA 완료율</div>
-            <div style="font-family:var(--font-d);font-size:32px;font-weight:700;color:var(--green)" id="dash-rma-rate">0%</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:4px"></div>
-          </div>
+        <div style="padding:16px 18px">
+          <div style="display:flex;gap:16px;margin-bottom:16px" id="projChartLegend"></div>
+          <div style="position:relative;height:160px;display:flex;align-items:flex-end;gap:8px;padding-bottom:24px" id="projChartBars"></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px" id="projChartStats"></div>
         </div>
-        <div style="padding:0 16px 12px;font-size:11px;color:var(--text3)" id="dash-as-top"></div>
       </div>
-    </div>
 
-    <!-- 중단 2열 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-      <!-- 모델별 검증 진행 현황 -->
+      <!-- 이슈 관리 등록 현황 -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title" style="font-size:13px">모델별 검증 진행 현황</div>
-          <select id="dash-verify-sel" style="background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:11px;padding:4px 8px;font-family:var(--font-b)" onchange="renderDashVerify()"></select>
-        </div>
-        <div style="padding:14px 18px" id="dashVerifyBody">
-          <div class="empty">프로젝트를 선택하세요</div>
-        </div>
-      </div>
-      <!-- 최근 품질 ISSUE -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title" style="font-size:13px">최근 등록된 품질 ISSUE</div>
+          <div class="card-title" style="font-size:13px">이슈 관리 등록 현황</div>
           <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="goPage('issue',document.querySelectorAll('.ni')[3])">+ 이슈 등록</button>
         </div>
-        <div id="dashIssueList" style="max-height:220px;overflow-y:auto"></div>
+        <div style="padding:10px 0" id="dashIssueList">
+          <div class="empty">등록된 이슈가 없습니다</div>
+        </div>
       </div>
     </div>
 
-    <!-- 하단 2열 -->
+    <!-- 중단 2열: A/S 현황 + SW Release -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-      <!-- 모델별 검증 체크리스트 -->
+
+      <!-- A/S 및 RMA 등록 현황 -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title" style="font-size:13px">모델별 검증 체크리스트</div>
-          <select id="dash-chk-sel" style="background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:11px;padding:4px 8px;font-family:var(--font-b)" onchange="renderDashChecklist()"></select>
+          <div class="card-title" style="font-size:13px">A/S 및 RMA 등록 현황</div>
+          <button class="act-btn" style="font-size:11px;padding:3px 10px" onclick="goPage('as',document.querySelectorAll('.ni')[4])">전체보기</button>
         </div>
-        <div style="padding:14px 18px" id="dashChkBody">
-          <div class="empty">프로젝트를 선택하세요</div>
+        <div style="padding:12px 18px">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+            <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">A/S 접수</div>
+              <div style="font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--accent)" id="dash-as-total">00</div>
+            </div>
+            <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border:1px solid rgba(248,81,73,.2)">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">RMA 진행</div>
+              <div style="font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--red)" id="dash-rma-total">00</div>
+            </div>
+            <div style="background:var(--bg3);border-radius:8px;padding:12px;text-align:center;border:1px solid rgba(63,185,80,.2)">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">처리완료</div>
+              <div style="font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--green)" id="dash-as-done">00</div>
+            </div>
+          </div>
+          <div id="dashAsRecent"></div>
         </div>
       </div>
+
+      <!-- 모델별 SW Release 현황 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size:13px">모델별 SW Release 현황</div>
+          <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="toggleSwForm()">+ 추가</button>
+        </div>
+        <div class="add-form" id="swForm">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;padding:2px 0">
+            <div class="fg"><label>모델명</label><input id="sw-model" placeholder="예: RV3K"></div>
+            <div class="fg"><label>버전</label><input id="sw-ver" placeholder="예: V1.2.3"></div>
+            <div class="fg"><label>릴리즈 일자</label><input id="sw-date" type="date"></div>
+            <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveSwRelease()">추가</button><button class="cancel-btn" onclick="toggleSwForm()">취소</button></div></div>
+          </div>
+          <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="fg"><label>주요 변경사항</label><input id="sw-note" placeholder="예: 카메라 드라이버 업데이트"></div>
+            <div class="fg"><label>Google Drive 링크 (선택)</label><input id="sw-link" placeholder="https://drive.google.com/..."></div>
+          </div>
+        </div>
+        <div id="swReleaseList" style="max-height:240px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <!-- 하단 2열: BOM 자료실 + 공지 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
       <!-- BOM 및 품질 산출물 자료실 -->
       <div class="card">
-        <div class="card-header"><div class="card-title" style="font-size:13px">BOM 및 품질 산출물 자료실</div></div>
+        <div class="card-header">
+          <div class="card-title" style="font-size:13px">BOM 및 품질 산출물 자료실</div>
+          <button class="act-btn" style="font-size:11px;padding:3px 10px" onclick="goPage('bom',document.querySelectorAll('.ni')[6])">전체보기</button>
+        </div>
         <div style="padding:14px 18px">
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px" id="dashBomGrid"></div>
         </div>
       </div>
-    </div>
-
-    <!-- 전체 하단 2열 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-      <!-- 기 검증 진행 샘플 사양 -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title" style="font-size:13px">기 검증 진행 샘플 사양</div>
-          <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="toggleSampleForm()">+ 추가</button>
-        </div>
-        <div class="add-form" id="sampleForm">
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end;padding:2px 0">
-            <div class="fg"><label>사양서명</label><input id="sp-name" placeholder="예: RV3K 메인보드 회로도 v1.2"></div>
-            <div class="fg"><label>검증 대상</label><input id="sp-target" placeholder="하드웨어"></div>
-            <div class="fg"><label>결과</label><select id="sp-result" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="Pass">Pass</option><option value="Fail">Fail</option><option value="진행중">진행중</option></select></div>
-            <div class="fg"><label>검증자</label><input id="sp-owner" placeholder="이영희"></div>
-            <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveSample()">추가</button><button class="cancel-btn" onclick="toggleSampleForm()">취소</button></div></div>
-          </div>
-        </div>
-        <table class="proj-table">
-          <thead><tr>
-            <th>사양서명</th><th style="width:80px">검증 대상</th>
-            <th style="width:60px">결과</th><th style="width:70px">상태</th>
-            <th style="width:70px">검증자</th><th style="width:50px">관리</th>
-          </tr></thead>
-          <tbody id="sampleTbody"></tbody>
-        </table>
-      </div>
       <!-- 팀 주요 공지 및 일정 -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title" style="font-size:13px">팀 주요 공지 및 일정 내역</div>
+          <div class="card-title" style="font-size:13px">팀 주요 공지 및 일정</div>
           <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="toggleNoticeForm()">+ 추가</button>
         </div>
         <div class="add-form" id="noticeAddForm">
@@ -1251,147 +1232,166 @@ function saveNotice(){
 function render(){renderKPI();renderTable();renderProjTable();renderNotices();renderDashboard();}
 
 function renderDashboard(){
-  renderDashMini();
-  renderDashAS();
+  renderProjChart();
   renderDashIssues();
+  renderDashAS();
   renderDashBom();
-  renderSamples();
-  updateDashSelects();
+  renderSwReleaseList();
 }
 
-// 미니 프로젝트 테이블
-function renderDashMini(){
-  const tb=document.getElementById('dashMiniTbody');
-  if(!tb)return;
-  const list=projects.filter(p=>p&&p.id&&p.type).slice(0,6);
-  if(!list.length){tb.innerHTML=`<tr><td colspan="4"><div class="empty">프로젝트가 없습니다</div></td></tr>`;return;}
-  tb.innerHTML=list.map(p=>`<tr class="proj-row" onclick="goPage('projects',document.querySelectorAll('.ni')[1])">
-    <td><div class="pc"><div class="pname">${p.name}</div></div></td>
-    <td><div class="pc" style="font-size:11px;color:var(--text2)">${p.step||'-'}</div></td>
-    <td><div class="pc"><span class="badge ${STATUS_CLS[p.status]||'b-wait'}">${p.status||'대기'}</span></div></td>
-    <td><div class="pc" style="font-size:11px;color:var(--text3)">${p.due||'-'}</div></td>
-  </tr>`).join('');
+// 1. 프로젝트 차트
+function renderProjChart(){
+  const legend=document.getElementById('projChartLegend');
+  const bars=document.getElementById('projChartBars');
+  const stats=document.getElementById('projChartStats');
+  if(!legend)return;
+
+  const statusGroups={'진행중':0,'대기':0,'지연':0,'정상':0,'완료':0};
+  projects.forEach(p=>{const s=p.status||'대기';if(statusGroups[s]!==undefined)statusGroups[s]++;});
+  const total=projects.length||1;
+  const colors={'진행중':'var(--accent)','대기':'var(--text3)','지연':'var(--red)','정상':'var(--green)','완료':'var(--purple)'};
+
+  // 레전드
+  legend.innerHTML=Object.entries(statusGroups).filter(([,v])=>v>0).map(([k,v])=>`
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)">
+      <div style="width:8px;height:8px;border-radius:2px;background:${colors[k]}"></div>${k} (${v})
+    </div>`).join('');
+
+  // 바 차트
+  const maxH=140;
+  bars.innerHTML=Object.entries(statusGroups).map(([k,v])=>{
+    if(!v)return '';
+    const h=Math.max(Math.round(v/total*maxH),8);
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+      <div style="font-size:11px;font-weight:500;color:${colors[k]}">${v}</div>
+      <div style="width:100%;height:${h}px;background:${colors[k]};border-radius:4px 4px 0 0;opacity:.85;transition:height .4s;min-width:28px"></div>
+      <div style="font-size:10px;color:var(--text3);text-align:center;white-space:nowrap">${k}</div>
+    </div>`;
+  }).join('');
+
+  // 통계
+  const delay=projects.filter(p=>p.status==='지연').length;
+  const done=projects.filter(p=>p.status==='완료').length;
+  const miss=projects.filter(p=>getMissing(p).length>0).length;
+  const avg=projects.length?Math.round(projects.reduce((a,p)=>a+getPct(p),0)/projects.length):0;
+  stats.innerHTML=`
+    <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center;border:1px solid var(--border)">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:4px">전체</div>
+      <div style="font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--accent)">${projects.length}</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center;border:1px solid rgba(248,81,73,.2)">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:4px">지연</div>
+      <div style="font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--red)">${delay}</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center;border:1px solid rgba(63,185,80,.2)">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:4px">검증완료</div>
+      <div style="font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--green)">${done}</div>
+    </div>
+    <div style="background:var(--bg3);border-radius:6px;padding:10px;text-align:center;border:1px solid rgba(210,153,34,.2)">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:4px">평균진행률</div>
+      <div style="font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--yellow)">${avg}%</div>
+    </div>`;
 }
 
-// A/S 현황
-function renderDashAS(){
-  const t=document.getElementById('dash-as-total');
-  const r=document.getElementById('dash-rma-total');
-  const rt=document.getElementById('dash-rma-rate');
-  const top=document.getElementById('dash-as-top');
-  if(!t)return;
-  const total=asItems.length;
-  const rma=asItems.filter(a=>a.type==='RMA').length;
-  const rmaDone=asItems.filter(a=>a.type==='RMA'&&a.status==='완료').length;
-  const rate=rma>0?Math.round(rmaDone/rma*100):0;
-  t.textContent=String(total).padStart(2,'0');
-  r.textContent=String(rma).padStart(2,'0');
-  rt.textContent=rate+'%';
-  // 불량 많은 모델
-  const counts={};
-  asItems.forEach(a=>{const k=a.customer||'기타';counts[k]=(counts[k]||0)+1;});
-  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  if(sorted.length&&top) top.innerHTML=`불량이 가장 높은 모델: <span style="color:var(--accent)">${sorted[0][0]}</span> (${sorted[0][1]}건)`;
-}
-
-// 이슈 목록
+// 2. 이슈 목록 (이슈 관리 연동)
 function renderDashIssues(){
   const el=document.getElementById('dashIssueList');
   if(!el)return;
   if(!issues.length){el.innerHTML=`<div class="empty">등록된 이슈가 없습니다</div>`;return;}
   const levelColor={'긴급':'var(--red)','일반':'var(--yellow)','개선':'var(--accent)'};
   const statusBadge={'오픈':'b-delay','처리중':'b-wait','완료':'b-ok'};
-  el.innerHTML=issues.slice().reverse().slice(0,5).map((iss,i)=>{
+  el.innerHTML=issues.slice().reverse().slice(0,6).map(iss=>{
     const pName=projects.find(p=>p.id===iss.projId)?.name||'-';
-    return `<div style="padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px">
+    return `<div style="padding:9px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;cursor:pointer" onclick="goPage('issue',document.querySelectorAll('.ni')[3])">
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
           <span style="font-size:10px;font-weight:700;color:${levelColor[iss.level]||'var(--text2)'};background:rgba(255,255,255,.06);padding:1px 6px;border-radius:3px">${iss.level||'일반'}</span>
           <span style="font-size:12px;color:var(--text)">${iss.title}</span>
         </div>
-        <div style="font-size:10px;color:var(--text3)">${pName} · ${iss.date||'-'}</div>
+        <div style="font-size:10px;color:var(--text3)">${pName} · ${iss.date||'-'}${iss.progress?` · ${iss.progress}`:''}</div>
       </div>
       <span class="badge ${statusBadge[iss.status]||'b-wait'}" style="flex-shrink:0">${iss.status||'오픈'}</span>
     </div>`;
   }).join('');
 }
 
-// BOM 자료실 미니 그리드
+// 3. A/S 현황
+function renderDashAS(){
+  const t=document.getElementById('dash-as-total');
+  if(!t)return;
+  const total=asItems.length;
+  const rma=asItems.filter(a=>a.type==='RMA').length;
+  const done=asItems.filter(a=>a.status==='완료').length;
+  t.textContent=String(total).padStart(2,'0');
+  document.getElementById('dash-rma-total').textContent=String(rma).padStart(2,'0');
+  document.getElementById('dash-as-done').textContent=String(done).padStart(2,'0');
+  const recent=document.getElementById('dashAsRecent');
+  if(!recent)return;
+  const list=asItems.slice().reverse().slice(0,4);
+  if(!list.length){recent.innerHTML=`<div style="font-size:11px;color:var(--text3);text-align:center;padding:12px">등록된 A/S 내역이 없습니다</div>`;return;}
+  const typeColor={'유상':'b-wait','무상':'b-prog','RMA':'b-delay'};
+  recent.innerHTML=`<div style="display:flex;flex-direction:column;gap:4px">${list.map(a=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="goPage('as',document.querySelectorAll('.ni')[4])">
+      <span class="badge ${typeColor[a.type]||'b-wait'}" style="flex-shrink:0">${a.type}</span>
+      <span style="font-size:12px;color:var(--text);flex:1">${a.customer}</span>
+      <span style="font-size:10px;color:var(--text3)">${a.date||'-'}</span>
+      <span class="badge ${a.status==='완료'?'b-ok':a.status==='처리중'?'b-wait':'b-prog'}">${a.status||'접수'}</span>
+    </div>`).join('')}</div>`;
+}
+
+// 4. BOM 자료실 미니
 function renderDashBom(){
   const el=document.getElementById('dashBomGrid');
   if(!el)return;
   const items=(bomItems.length?bomItems:DEFAULT_BOM).slice(0,4);
   el.innerHTML=items.map(b=>`
     <div style="background:var(--bg3);border-radius:8px;padding:14px 12px;text-align:center;border:1px solid var(--border);cursor:pointer;transition:border-color .15s" onclick="goPage('bom',document.querySelectorAll('.ni')[6])" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
-      <div style="font-size:24px;margin-bottom:8px">${b.icon}</div>
+      <div style="font-size:22px;margin-bottom:6px">${b.icon}</div>
       <div style="font-size:11px;font-weight:500;color:var(--text);line-height:1.3">${b.name}</div>
     </div>`).join('');
 }
 
-// 드롭다운 업데이트
-function updateDashSelects(){
-  const opts=`<option value="">-- 모델 선택 --</option>`+projects.filter(p=>p&&p.id).map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
-  const s1=document.getElementById('dash-verify-sel');
-  const s2=document.getElementById('dash-chk-sel');
-  if(s1)s1.innerHTML=opts;
-  if(s2)s2.innerHTML=opts;
+// 5. SW Release
+let swReleases=[];
+function toggleSwForm(){document.getElementById('swForm').classList.toggle('open');}
+function saveSwRelease(){
+  const model=document.getElementById('sw-model').value.trim();
+  const ver=document.getElementById('sw-ver').value.trim();
+  if(!model||!ver){alert('모델명과 버전을 입력해주세요');return;}
+  const s={id:'sw'+Date.now(),model,ver,date:document.getElementById('sw-date').value,note:document.getElementById('sw-note').value.trim(),link:document.getElementById('sw-link').value.trim()};
+  swReleases.push(s);
+  if(dbRef)dbRef.child('swReleases/'+s.id).set(s);
+  ['sw-model','sw-ver','sw-note','sw-link'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('swForm').classList.remove('open');
+  renderSwReleaseList();
+}
+function deleteSwRelease(id){
+  if(!confirm('삭제하시겠습니까?'))return;
+  swReleases=swReleases.filter(s=>s.id!==id);
+  if(dbRef)dbRef.child('swReleases/'+id).remove();
+  renderSwReleaseList();
+}
+function renderSwReleaseList(){
+  const el=document.getElementById('swReleaseList');
+  if(!el)return;
+  if(!swReleases.length){el.innerHTML=`<div class="empty">등록된 SW Release가 없습니다</div>`;return;}
+  const sorted=[...swReleases].reverse();
+  el.innerHTML=sorted.map(s=>`
+    <div style="padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+          <span style="font-family:var(--font-d);font-size:13px;font-weight:600;color:var(--accent)">${s.model}</span>
+          <span style="background:rgba(47,129,247,.15);color:var(--accent);border:1px solid rgba(47,129,247,.25);padding:1px 8px;border-radius:4px;font-size:11px;font-weight:600">${s.ver}</span>
+          ${s.date?`<span style="font-size:10px;color:var(--text3)">${s.date}</span>`:''}
+        </div>
+        ${s.note?`<div style="font-size:11px;color:var(--text2);margin-bottom:3px">${s.note}</div>`:''}
+        ${s.link?`<a href="${s.link}" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none">📄 릴리즈 노트 보기</a>`:''}
+      </div>
+      <button class="act-btn del" style="font-size:10px;padding:2px 8px;flex-shrink:0" onclick="deleteSwRelease('${s.id}')">삭제</button>
+    </div>`).join('');
 }
 
-// 검증 진행 현황
-function renderDashVerify(){
-  const sel=document.getElementById('dash-verify-sel');
-  const el=document.getElementById('dashVerifyBody');
-  if(!sel||!el)return;
-  const pid=sel.value;
-  if(!pid){el.innerHTML=`<div class="empty">모델을 선택하세요</div>`;return;}
-  const p=projects.find(x=>x.id===pid);
-  if(!p){el.innerHTML=`<div class="empty">프로젝트를 찾을 수 없습니다</div>`;return;}
-  const chks=CHECKLISTS[p.type]||[];
-  const pct=getPct(p);
-  const bc=pct===100?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
-  el.innerHTML=`
-    <div class="prog-wrap" style="margin-bottom:12px"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${bc}"></div></div><span class="prog-pct">${pct}%</span></div>
-    <div style="display:flex;flex-direction:column;gap:4px">
-      ${chks.map(c=>{
-        const done=(p.done||[]).includes(c);
-        return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:12px;color:${done?'var(--green)':'var(--text3)'}">${done?'✓':'○'}</span>
-          <span style="font-size:12px;color:${done?'var(--text)':'var(--text3)'};flex:1">${c}</span>
-          ${done?'<span style="font-size:10px;color:var(--green)">완료</span>':'<span style="font-size:10px;color:var(--red)">미완료</span>'}
-        </div>`;
-      }).join('')}
-    </div>`;
-}
 
-// 체크리스트
-function renderDashChecklist(){
-  const sel=document.getElementById('dash-chk-sel');
-  const el=document.getElementById('dashChkBody');
-  if(!sel||!el)return;
-  const pid=sel.value;
-  if(!pid){el.innerHTML=`<div class="empty">모델을 선택하세요</div>`;return;}
-  const p=projects.find(x=>x.id===pid);
-  if(!p){el.innerHTML=`<div class="empty">프로젝트를 찾을 수 없습니다</div>`;return;}
-  const chks=CHECKLISTS[p.type]||[];
-  el.innerHTML=`<div style="font-size:11px;color:var(--text3);margin-bottom:8px">${p.name} (${p.type})</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px">
-      ${chks.map(c=>{
-        const done=(p.done||[]).includes(c);
-        return `<div class="chk-tag${done?' done':''}" onclick="dashToggleCheck('${p.id}','${c}')">${done?'✓ ':'○ '}${c}</div>`;
-      }).join('')}
-    </div>`;
-}
-function dashToggleCheck(pid,chk){
-  const p=projects.find(x=>x.id===pid);if(!p)return;
-  if(!p.done)p.done=[];
-  if(p.done.includes(chk))p.done=p.done.filter(c=>c!==chk);
-  else p.done.push(chk);
-  if(dbRef)dbRef.child('projects/'+pid+'/done').set(p.done);
-  renderDashChecklist();renderDashVerify();renderKPI();
-}
-
-// 샘플 사양
-let samples=[];
 function toggleSampleForm(){document.getElementById('sampleForm').classList.toggle('open');}
 function saveSample(){
   const name=document.getElementById('sp-name').value.trim();
@@ -1738,10 +1738,10 @@ function initFirebase(){
           inoutItems=data?Object.values(data).filter(i=>i&&i.id):[];
           renderInout();
         });
-        dbRef.child('samples').on('value',snap=>{
+        dbRef.child('swReleases').on('value',snap=>{
           const data=snap.val();
-          samples=data?Object.values(data).filter(s=>s&&s.id):[];
-          renderSamples();
+          swReleases=data?Object.values(data).filter(s=>s&&s.id):[];
+          renderSwReleaseList();
         });
         const bar=document.getElementById('statusBar');
         bar.className='status-bar connected';
