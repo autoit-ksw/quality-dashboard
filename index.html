@@ -218,54 +218,135 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
   <!-- 대시보드 홈 -->
   <div class="page active" id="page-dashboard">
     <div class="status-bar" id="statusBar">🔥 Firebase 연결 중...</div>
-    <div class="kpi-grid" id="kpiGrid"></div>
-    <div class="body-grid">
+
+    <!-- 상단 2열 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <!-- EP/MP 신규 모델 현황 -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title">프로젝트 현황</div>
-          <div class="filters">
-            <button class="fc on" data-f="all" onclick="setFilter(this)">전체</button>
-            <button class="fc" data-f="4M변경" onclick="setFilter(this)">4M변경</button>
-            <button class="fc" data-f="신규개발" onclick="setFilter(this)">신규개발</button>
-            <button class="fc" data-f="납품검사" onclick="setFilter(this)">납품검사</button>
-            <button class="fc" data-f="missing" onclick="setFilter(this)">누락있음</button>
+          <div class="card-title" style="font-size:13px">EP/MP 신규 모델 현황</div>
+          <button class="act-btn" style="font-size:11px;padding:3px 10px" onclick="goPage('projects',document.querySelectorAll('.ni')[1])">전체보기</button>
+        </div>
+        <table class="proj-table">
+          <thead><tr>
+            <th>모델명</th><th style="width:80px">단계</th>
+            <th style="width:70px">상태</th><th style="width:95px">목표일</th>
+          </tr></thead>
+          <tbody id="dashMiniTbody"></tbody>
+        </table>
+      </div>
+      <!-- 금월 A/S 및 RMA 현황 -->
+      <div class="card">
+        <div class="card-header"><div class="card-title" style="font-size:13px">금월 A/S 및 RMA 현황</div></div>
+        <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div style="background:var(--bg3);border-radius:8px;padding:14px;text-align:center;border:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">A/S 접수</div>
+            <div style="font-family:var(--font-d);font-size:32px;font-weight:700;color:var(--accent)" id="dash-as-total">00</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:4px">건</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:8px;padding:14px;text-align:center;border:1px solid rgba(248,81,73,.2)">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">RMA 진행 중</div>
+            <div style="font-family:var(--font-d);font-size:32px;font-weight:700;color:var(--red)" id="dash-rma-total">00</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:4px">건</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:8px;padding:14px;text-align:center;border:1px solid rgba(63,185,80,.2)">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">RMA 완료율</div>
+            <div style="font-family:var(--font-d);font-size:32px;font-weight:700;color:var(--green)" id="dash-rma-rate">0%</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:4px"></div>
+          </div>
+        </div>
+        <div style="padding:0 16px 12px;font-size:11px;color:var(--text3)" id="dash-as-top"></div>
+      </div>
+    </div>
+
+    <!-- 중단 2열 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <!-- 모델별 검증 진행 현황 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size:13px">모델별 검증 진행 현황</div>
+          <select id="dash-verify-sel" style="background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:11px;padding:4px 8px;font-family:var(--font-b)" onchange="renderDashVerify()"></select>
+        </div>
+        <div style="padding:14px 18px" id="dashVerifyBody">
+          <div class="empty">프로젝트를 선택하세요</div>
+        </div>
+      </div>
+      <!-- 최근 품질 ISSUE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size:13px">최근 등록된 품질 ISSUE</div>
+          <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="goPage('issue',document.querySelectorAll('.ni')[3])">+ 이슈 등록</button>
+        </div>
+        <div id="dashIssueList" style="max-height:220px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <!-- 하단 2열 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <!-- 모델별 검증 체크리스트 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size:13px">모델별 검증 체크리스트</div>
+          <select id="dash-chk-sel" style="background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:11px;padding:4px 8px;font-family:var(--font-b)" onchange="renderDashChecklist()"></select>
+        </div>
+        <div style="padding:14px 18px" id="dashChkBody">
+          <div class="empty">프로젝트를 선택하세요</div>
+        </div>
+      </div>
+      <!-- BOM 및 품질 산출물 자료실 -->
+      <div class="card">
+        <div class="card-header"><div class="card-title" style="font-size:13px">BOM 및 품질 산출물 자료실</div></div>
+        <div style="padding:14px 18px">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px" id="dashBomGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 전체 하단 2열 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <!-- 기 검증 진행 샘플 사양 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size:13px">기 검증 진행 샘플 사양</div>
+          <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="toggleSampleForm()">+ 추가</button>
+        </div>
+        <div class="add-form" id="sampleForm">
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end;padding:2px 0">
+            <div class="fg"><label>사양서명</label><input id="sp-name" placeholder="예: RV3K 메인보드 회로도 v1.2"></div>
+            <div class="fg"><label>검증 대상</label><input id="sp-target" placeholder="하드웨어"></div>
+            <div class="fg"><label>결과</label><select id="sp-result" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="Pass">Pass</option><option value="Fail">Fail</option><option value="진행중">진행중</option></select></div>
+            <div class="fg"><label>검증자</label><input id="sp-owner" placeholder="이영희"></div>
+            <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveSample()">추가</button><button class="cancel-btn" onclick="toggleSampleForm()">취소</button></div></div>
           </div>
         </div>
         <table class="proj-table">
           <thead><tr>
-            <th style="width:40px">NO</th><th>프로젝트명</th>
-            <th style="width:80px">유형</th><th style="width:90px">단계</th>
-            <th style="width:70px">상태</th><th style="width:140px">검증 진행률</th>
-            <th style="width:95px">목표일</th>
+            <th>사양서명</th><th style="width:80px">검증 대상</th>
+            <th style="width:60px">결과</th><th style="width:70px">상태</th>
+            <th style="width:70px">검증자</th><th style="width:50px">관리</th>
           </tr></thead>
-          <tbody id="dashTbody"></tbody>
+          <tbody id="sampleTbody"></tbody>
         </table>
       </div>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title" style="font-size:12px">📅 Notice / Schedule</div>
-            <button class="add-btn" style="font-size:10px;padding:3px 8px" onclick="toggleNoticeForm()">+ 추가</button>
-          </div>
-          <div class="add-form" id="noticeAddForm">
-            <div style="display:grid;grid-template-columns:auto 1fr 1fr auto;gap:6px;align-items:center;padding:2px 0">
-              <select id="nc-color" style="background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:11px;padding:5px 4px;font-family:var(--font-b)"><option value="r">🔴</option><option value="y">🟡</option><option value="b">🔵</option></select>
-              <input id="nc-text" placeholder="제목" style="padding:5px 8px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none;width:100%">
-              <input id="nc-sub" placeholder="내용" style="padding:5px 8px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none;width:100%">
-              <div style="display:flex;gap:4px">
-                <input id="nc-d" placeholder="D-1" style="width:44px;padding:5px 6px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none">
-                <button class="save-btn" style="font-size:10px;padding:4px 8px;white-space:nowrap" onclick="saveNotice()">추가</button>
-                <button class="cancel-btn" style="font-size:10px;padding:4px 6px" onclick="toggleNoticeForm()">✕</button>
-              </div>
+      <!-- 팀 주요 공지 및 일정 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size:13px">팀 주요 공지 및 일정 내역</div>
+          <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="toggleNoticeForm()">+ 추가</button>
+        </div>
+        <div class="add-form" id="noticeAddForm">
+          <div style="display:grid;grid-template-columns:auto 1fr 1fr auto;gap:6px;align-items:center;padding:2px 0">
+            <select id="nc-color" style="background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:11px;padding:5px 4px;font-family:var(--font-b)"><option value="r">🔴</option><option value="y">🟡</option><option value="b">🔵</option></select>
+            <input id="nc-text" placeholder="제목" style="padding:5px 8px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none;width:100%">
+            <input id="nc-sub" placeholder="내용" style="padding:5px 8px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none;width:100%">
+            <div style="display:flex;gap:4px">
+              <input id="nc-d" placeholder="D-1" style="width:44px;padding:5px 6px;font-size:11px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font-b);outline:none">
+              <button class="save-btn" style="font-size:10px;padding:4px 8px;white-space:nowrap" onclick="saveNotice()">추가</button>
+              <button class="cancel-btn" style="font-size:10px;padding:4px 6px" onclick="toggleNoticeForm()">✕</button>
             </div>
           </div>
-          <div id="noticeList"></div>
         </div>
-        <div class="lib-card">
-          <div class="lib-tag">Internal Library</div>
-          <div class="lib-title">표준 품질 양식 및<br>BOM 자료실 바로가기</div>
-          <button class="lib-btn" onclick="goPage('bom',document.querySelectorAll('.ni')[6])">GO TO FOLDER →</button>
-        </div>
+        <div id="noticeList"></div>
       </div>
     </div>
   </div>
@@ -587,6 +668,7 @@ function goPage(id, el){
 
 // KPI
 function renderKPI(){
+  if(!document.getElementById('kpiGrid'))return;
   const t=projects.length, miss=projects.filter(p=>getMissing(p).length>0).length;
   const avg=t?Math.round(projects.reduce((a,p)=>a+getPct(p),0)/t):0;
   const delay=projects.filter(p=>p.status==='지연').length;
@@ -599,6 +681,7 @@ function renderKPI(){
 
 // DASH TABLE
 function renderTable(){
+  if(!document.getElementById('dashTbody'))return;
   const q=(document.getElementById('searchInput').value||'').toLowerCase();
   let list=projects.filter(p=>p&&p.id&&p.type);
   if(q) list=list.filter(p=>p.name.toLowerCase().includes(q)||(p.owner||'').toLowerCase().includes(q));
@@ -1107,7 +1190,181 @@ function saveNotice(){
   renderNotices();
 }
 
-function render(){renderKPI();renderTable();renderProjTable();renderNotices();}
+function render(){renderKPI();renderTable();renderProjTable();renderNotices();renderDashboard();}
+
+function renderDashboard(){
+  renderDashMini();
+  renderDashAS();
+  renderDashIssues();
+  renderDashBom();
+  renderSamples();
+  updateDashSelects();
+}
+
+// 미니 프로젝트 테이블
+function renderDashMini(){
+  const tb=document.getElementById('dashMiniTbody');
+  if(!tb)return;
+  const list=projects.filter(p=>p&&p.id&&p.type).slice(0,6);
+  if(!list.length){tb.innerHTML=`<tr><td colspan="4"><div class="empty">프로젝트가 없습니다</div></td></tr>`;return;}
+  tb.innerHTML=list.map(p=>`<tr class="proj-row" onclick="goPage('projects',document.querySelectorAll('.ni')[1])">
+    <td><div class="pc"><div class="pname">${p.name}</div></div></td>
+    <td><div class="pc" style="font-size:11px;color:var(--text2)">${p.step||'-'}</div></td>
+    <td><div class="pc"><span class="badge ${STATUS_CLS[p.status]||'b-wait'}">${p.status||'대기'}</span></div></td>
+    <td><div class="pc" style="font-size:11px;color:var(--text3)">${p.due||'-'}</div></td>
+  </tr>`).join('');
+}
+
+// A/S 현황
+function renderDashAS(){
+  const t=document.getElementById('dash-as-total');
+  const r=document.getElementById('dash-rma-total');
+  const rt=document.getElementById('dash-rma-rate');
+  const top=document.getElementById('dash-as-top');
+  if(!t)return;
+  const total=asItems.length;
+  const rma=asItems.filter(a=>a.type==='RMA').length;
+  const rmaDone=asItems.filter(a=>a.type==='RMA'&&a.status==='완료').length;
+  const rate=rma>0?Math.round(rmaDone/rma*100):0;
+  t.textContent=String(total).padStart(2,'0');
+  r.textContent=String(rma).padStart(2,'0');
+  rt.textContent=rate+'%';
+  // 불량 많은 모델
+  const counts={};
+  asItems.forEach(a=>{const k=a.customer||'기타';counts[k]=(counts[k]||0)+1;});
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  if(sorted.length&&top) top.innerHTML=`불량이 가장 높은 모델: <span style="color:var(--accent)">${sorted[0][0]}</span> (${sorted[0][1]}건)`;
+}
+
+// 이슈 목록
+function renderDashIssues(){
+  const el=document.getElementById('dashIssueList');
+  if(!el)return;
+  if(!issues.length){el.innerHTML=`<div class="empty">등록된 이슈가 없습니다</div>`;return;}
+  const levelColor={'긴급':'var(--red)','일반':'var(--yellow)','개선':'var(--accent)'};
+  const statusBadge={'오픈':'b-delay','처리중':'b-wait','완료':'b-ok'};
+  el.innerHTML=issues.slice().reverse().slice(0,5).map((iss,i)=>{
+    const pName=projects.find(p=>p.id===iss.projId)?.name||'-';
+    return `<div style="padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+          <span style="font-size:10px;font-weight:700;color:${levelColor[iss.level]||'var(--text2)'};background:rgba(255,255,255,.06);padding:1px 6px;border-radius:3px">${iss.level||'일반'}</span>
+          <span style="font-size:12px;color:var(--text)">${iss.title}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text3)">${pName} · ${iss.date||'-'}</div>
+      </div>
+      <span class="badge ${statusBadge[iss.status]||'b-wait'}" style="flex-shrink:0">${iss.status||'오픈'}</span>
+    </div>`;
+  }).join('');
+}
+
+// BOM 자료실 미니 그리드
+function renderDashBom(){
+  const el=document.getElementById('dashBomGrid');
+  if(!el)return;
+  const items=(bomItems.length?bomItems:DEFAULT_BOM).slice(0,4);
+  el.innerHTML=items.map(b=>`
+    <div style="background:var(--bg3);border-radius:8px;padding:14px 12px;text-align:center;border:1px solid var(--border);cursor:pointer;transition:border-color .15s" onclick="goPage('bom',document.querySelectorAll('.ni')[6])" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:24px;margin-bottom:8px">${b.icon}</div>
+      <div style="font-size:11px;font-weight:500;color:var(--text);line-height:1.3">${b.name}</div>
+    </div>`).join('');
+}
+
+// 드롭다운 업데이트
+function updateDashSelects(){
+  const opts=`<option value="">-- 모델 선택 --</option>`+projects.filter(p=>p&&p.id).map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  const s1=document.getElementById('dash-verify-sel');
+  const s2=document.getElementById('dash-chk-sel');
+  if(s1)s1.innerHTML=opts;
+  if(s2)s2.innerHTML=opts;
+}
+
+// 검증 진행 현황
+function renderDashVerify(){
+  const sel=document.getElementById('dash-verify-sel');
+  const el=document.getElementById('dashVerifyBody');
+  if(!sel||!el)return;
+  const pid=sel.value;
+  if(!pid){el.innerHTML=`<div class="empty">모델을 선택하세요</div>`;return;}
+  const p=projects.find(x=>x.id===pid);
+  if(!p){el.innerHTML=`<div class="empty">프로젝트를 찾을 수 없습니다</div>`;return;}
+  const chks=CHECKLISTS[p.type]||[];
+  const pct=getPct(p);
+  const bc=pct===100?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
+  el.innerHTML=`
+    <div class="prog-wrap" style="margin-bottom:12px"><div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${bc}"></div></div><span class="prog-pct">${pct}%</span></div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      ${chks.map(c=>{
+        const done=(p.done||[]).includes(c);
+        return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:${done?'var(--green)':'var(--text3)'}">${done?'✓':'○'}</span>
+          <span style="font-size:12px;color:${done?'var(--text)':'var(--text3)'};flex:1">${c}</span>
+          ${done?'<span style="font-size:10px;color:var(--green)">완료</span>':'<span style="font-size:10px;color:var(--red)">미완료</span>'}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// 체크리스트
+function renderDashChecklist(){
+  const sel=document.getElementById('dash-chk-sel');
+  const el=document.getElementById('dashChkBody');
+  if(!sel||!el)return;
+  const pid=sel.value;
+  if(!pid){el.innerHTML=`<div class="empty">모델을 선택하세요</div>`;return;}
+  const p=projects.find(x=>x.id===pid);
+  if(!p){el.innerHTML=`<div class="empty">프로젝트를 찾을 수 없습니다</div>`;return;}
+  const chks=CHECKLISTS[p.type]||[];
+  el.innerHTML=`<div style="font-size:11px;color:var(--text3);margin-bottom:8px">${p.name} (${p.type})</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      ${chks.map(c=>{
+        const done=(p.done||[]).includes(c);
+        return `<div class="chk-tag${done?' done':''}" onclick="dashToggleCheck('${p.id}','${c}')">${done?'✓ ':'○ '}${c}</div>`;
+      }).join('')}
+    </div>`;
+}
+function dashToggleCheck(pid,chk){
+  const p=projects.find(x=>x.id===pid);if(!p)return;
+  if(!p.done)p.done=[];
+  if(p.done.includes(chk))p.done=p.done.filter(c=>c!==chk);
+  else p.done.push(chk);
+  if(dbRef)dbRef.child('projects/'+pid+'/done').set(p.done);
+  renderDashChecklist();renderDashVerify();renderKPI();
+}
+
+// 샘플 사양
+let samples=[];
+function toggleSampleForm(){document.getElementById('sampleForm').classList.toggle('open');}
+function saveSample(){
+  const name=document.getElementById('sp-name').value.trim();
+  if(!name){alert('사양서명을 입력해주세요');return;}
+  const s={id:'sp'+Date.now(),name,target:document.getElementById('sp-target').value.trim(),result:document.getElementById('sp-result').value,status:'검증완료',owner:document.getElementById('sp-owner').value.trim(),date:today()};
+  samples.push(s);
+  if(dbRef)dbRef.child('samples/'+s.id).set(s);
+  document.getElementById('sp-name').value='';document.getElementById('sp-target').value='';document.getElementById('sp-owner').value='';
+  document.getElementById('sampleForm').classList.remove('open');
+  renderSamples();
+}
+function deleteSample(id){
+  if(!confirm('삭제하시겠습니까?'))return;
+  samples=samples.filter(s=>s.id!==id);
+  if(dbRef)dbRef.child('samples/'+id).remove();
+  renderSamples();
+}
+function renderSamples(){
+  const tb=document.getElementById('sampleTbody');
+  if(!tb)return;
+  if(!samples.length){tb.innerHTML=`<tr><td colspan="6"><div class="empty">등록된 사양이 없습니다</div></td></tr>`;return;}
+  const rColor={'Pass':'b-ok','Fail':'b-delay','진행중':'b-wait'};
+  tb.innerHTML=samples.map((s,i)=>`<tr class="proj-row">
+    <td><div class="pc" style="font-size:12px">${s.name}</div></td>
+    <td><div class="pc" style="font-size:11px;color:var(--text2)">${s.target||'-'}</div></td>
+    <td><div class="pc"><span class="badge ${rColor[s.result]||'b-wait'}">${s.result}</span></div></td>
+    <td><div class="pc"><span class="badge b-ok" style="font-size:10px">검증완료</span></div></td>
+    <td><div class="pc" style="font-size:12px">${s.owner||'-'}</div></td>
+    <td><div class="pc"><button class="act-btn del" style="font-size:10px;padding:2px 8px" onclick="deleteSample('${s.id}')">삭제</button></div></td>
+  </tr>`).join('');
+}
 
 // EXPAND
 function toggleExpand(id){expandedId=expandedId===id?null:id;renderTable();}
@@ -1336,6 +1593,11 @@ function initFirebase(){
           const data=snap.val();
           notices=data?Object.values(data).filter(n=>n&&n.text):[];
           renderNotices();
+        });
+        dbRef.child('samples').on('value',snap=>{
+          const data=snap.val();
+          samples=data?Object.values(data).filter(s=>s&&s.id):[];
+          renderSamples();
         });
         const bar=document.getElementById('statusBar');
         bar.className='status-bar connected';
