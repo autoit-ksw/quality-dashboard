@@ -201,6 +201,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
     <div class="ni" onclick="goPage('as',this)">⚙ A/S 및 RMA</div>
     <div class="ni" onclick="goPage('checklist',this)">☑ 체크리스트</div>
     <div class="ni" onclick="goPage('bom',this)">◻ BOM / 자료실</div>
+    <div class="ni" onclick="goPage('inout',this)">⇅ 검증용 자재 입출고</div>
   </nav>
   <div class="user-box"><div class="avatar">SW</div><div><div class="u-name">김승원 부장</div><div class="u-role">품질운영 총괄</div></div></div>
 </aside>
@@ -538,6 +539,62 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
     </div>
   </div>
 
+  <!-- 검증용 자재 입출고 -->
+  <div class="page" id="page-inout">
+    <div class="kpi-grid" id="inoutKpiGrid">
+      <div class="kpi blue"><div class="kpi-label">총 입고</div><div class="kpi-num" id="io-in">00</div><div class="kpi-sub">입고 건수</div></div>
+      <div class="kpi green"><div class="kpi-label">총 출고</div><div class="kpi-num" id="io-out">00</div><div class="kpi-sub">출고 건수</div></div>
+      <div class="kpi yellow"><div class="kpi-label">재고 중</div><div class="kpi-num" id="io-stock">00</div><div class="kpi-sub">현재 보유 건수</div></div>
+      <div class="kpi red"><div class="kpi-label">반납 완료</div><div class="kpi-num" id="io-done">00</div><div class="kpi-sub">반납 처리 건수</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">검증용 자재 입출고 관리</div>
+        <button class="add-btn" onclick="toggleInoutForm()">+ 입출고 등록</button>
+      </div>
+      <div class="add-form" id="inoutForm">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;padding:2px 0">
+          <div class="fg"><label>자재명/모델</label><input id="io-name" placeholder="예: AMC-HC20N 샘플"></div>
+          <div class="fg"><label>수량</label><input id="io-qty" type="number" min="1" placeholder="1" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+          <div class="fg"><label>구분</label>
+            <select id="io-type" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none">
+              <option value="입고">입고</option>
+              <option value="출고">출고</option>
+              <option value="반납">반납</option>
+            </select>
+          </div>
+          <div class="fg"><label>관련 프로젝트</label><select id="io-proj" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></select></div>
+          <div class="fg"><label>담당자</label><input id="io-owner" placeholder="홍길동"></div>
+          <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveInout()">등록</button><button class="cancel-btn" onclick="toggleInoutForm()">취소</button></div></div>
+        </div>
+        <div style="margin-top:8px">
+          <div class="fg"><label>비고</label><input id="io-note" placeholder="비고 입력 (선택)" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+        </div>
+      </div>
+      <!-- 필터 -->
+      <div style="padding:10px 18px;display:flex;gap:6px;border-bottom:1px solid var(--border)">
+        <button class="fc on" data-f="all" onclick="setInoutFilter(this)">전체</button>
+        <button class="fc" data-f="입고" onclick="setInoutFilter(this)">입고</button>
+        <button class="fc" data-f="출고" onclick="setInoutFilter(this)">출고</button>
+        <button class="fc" data-f="반납" onclick="setInoutFilter(this)">반납</button>
+      </div>
+      <table class="proj-table">
+        <thead><tr>
+          <th style="width:40px">NO</th>
+          <th>자재명/모델</th>
+          <th style="width:60px">수량</th>
+          <th style="width:60px">구분</th>
+          <th style="width:130px">관련 프로젝트</th>
+          <th style="width:80px">담당자</th>
+          <th style="width:100px">일자</th>
+          <th>비고</th>
+          <th style="width:60px">관리</th>
+        </tr></thead>
+        <tbody id="inoutTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
 </main>
 
 <!-- 체크리스트 파일 첨부 폼 -->
@@ -657,13 +714,14 @@ function goPage(id, el){
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(el) el.classList.add('active');
-  const titles={dashboard:'DASHBOARD',projects:'프로젝트 관리',verify:'검증 현황',issue:'이슈 관리',as:'A/S 및 RMA',checklist:'체크리스트',bom:'BOM / 자료실'};
+  const titles={dashboard:'DASHBOARD',projects:'프로젝트 관리',verify:'검증 현황',issue:'이슈 관리',as:'A/S 및 RMA',checklist:'체크리스트',bom:'BOM / 자료실',inout:'검증용 자재 입출고'};
   document.getElementById('pageTitle').textContent=titles[id]||id.toUpperCase();
   if(id==='verify') renderVerify();
   if(id==='checklist') renderChecklist();
   if(id==='bom') renderBom();
   if(id==='issue') renderIssues();
   if(id==='as') renderAs();
+  if(id==='inout') renderInout();
 }
 
 // KPI
@@ -1552,6 +1610,87 @@ function changeAsStatus(id,val){
 }
 
 // FIREBASE
+// 검증용 자재 입출고
+let inoutItems=[], inoutFilter='all';
+
+function toggleInoutForm(){
+  const f=document.getElementById('inoutForm');
+  f.classList.toggle('open');
+  // 관련 프로젝트 드롭다운 업데이트
+  const sel=document.getElementById('io-proj');
+  sel.innerHTML=`<option value="">-- 선택 --</option>`+projects.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+function setInoutFilter(btn){
+  document.querySelectorAll('#page-inout .fc').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  inoutFilter=btn.dataset.f;
+  renderInout();
+}
+
+function saveInout(){
+  const name=document.getElementById('io-name').value.trim();
+  if(!name){alert('자재명을 입력해주세요');return;}
+  const item={
+    id:'io'+Date.now(),
+    name,
+    qty:parseInt(document.getElementById('io-qty').value)||1,
+    type:document.getElementById('io-type').value,
+    projId:document.getElementById('io-proj').value,
+    owner:document.getElementById('io-owner').value.trim(),
+    note:document.getElementById('io-note').value.trim(),
+    date:today()
+  };
+  inoutItems.push(item);
+  if(dbRef)dbRef.child('inout/'+item.id).set(item);
+  ['io-name','io-owner','io-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('io-qty').value='1';
+  document.getElementById('inoutForm').classList.remove('open');
+  renderInout();
+}
+
+function deleteInout(id){
+  if(!confirm('삭제하시겠습니까?'))return;
+  inoutItems=inoutItems.filter(i=>i.id!==id);
+  if(dbRef)dbRef.child('inout/'+id).remove();
+  renderInout();
+}
+
+function renderInout(){
+  // KPI
+  const inCnt=inoutItems.filter(i=>i.type==='입고').length;
+  const outCnt=inoutItems.filter(i=>i.type==='출고').length;
+  const stockCnt=inoutItems.filter(i=>i.type==='입고'||i.type==='출고').length;
+  const doneCnt=inoutItems.filter(i=>i.type==='반납').length;
+  const k1=document.getElementById('io-in');
+  if(k1){
+    k1.textContent=String(inCnt).padStart(2,'0');
+    document.getElementById('io-out').textContent=String(outCnt).padStart(2,'0');
+    document.getElementById('io-stock').textContent=String(stockCnt).padStart(2,'0');
+    document.getElementById('io-done').textContent=String(doneCnt).padStart(2,'0');
+  }
+  const tb=document.getElementById('inoutTbody');
+  if(!tb)return;
+  let list=inoutFilter==='all'?inoutItems:inoutItems.filter(i=>i.type===inoutFilter);
+  list=[...list].reverse();
+  if(!list.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty">등록된 입출고 내역이 없습니다</div></td></tr>`;return;}
+  const typeColor={'입고':'b-prog','출고':'b-wait','반납':'b-ok'};
+  tb.innerHTML=list.map((item,i)=>{
+    const pName=projects.find(p=>p.id===item.projId)?.name||'-';
+    return `<tr class="proj-row">
+      <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
+      <td><div class="pc" style="font-size:12px;font-weight:500">${item.name}</div></td>
+      <td><div class="pc" style="font-size:12px;text-align:center">${item.qty||1}</div></td>
+      <td><div class="pc"><span class="badge ${typeColor[item.type]||'b-wait'}">${item.type}</span></div></td>
+      <td><div class="pc" style="font-size:11px;color:var(--text2)">${pName}</div></td>
+      <td><div class="pc" style="font-size:12px">${item.owner||'-'}</div></td>
+      <td><div class="pc" style="font-size:11px;color:var(--text3)">${item.date||'-'}</div></td>
+      <td><div class="pc" style="font-size:11px;color:var(--text3)">${item.note||'-'}</div></td>
+      <td><div class="pc"><button class="act-btn del" style="font-size:10px;padding:2px 8px" onclick="deleteInout('${item.id}')">삭제</button></div></td>
+    </tr>`;
+  }).join('');
+}
+
 function initFirebase(){
   const s1=document.createElement('script');
   s1.src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js';
@@ -1593,6 +1732,11 @@ function initFirebase(){
           const data=snap.val();
           notices=data?Object.values(data).filter(n=>n&&n.text):[];
           renderNotices();
+        });
+        dbRef.child('inout').on('value',snap=>{
+          const data=snap.val();
+          inoutItems=data?Object.values(data).filter(i=>i&&i.id):[];
+          renderInout();
         });
         dbRef.child('samples').on('value',snap=>{
           const data=snap.val();
