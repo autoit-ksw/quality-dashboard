@@ -243,14 +243,32 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
         </table>
       </div>
 
-      <!-- 이슈 관리 등록 현황 -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title" style="font-size:13px">이슈 관리 등록 현황</div>
-          <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="goPage('issue',document.querySelectorAll('.ni')[3])">+ 이슈 등록</button>
+      <!-- 이슈 관리 등록 현황 + 신규 프로젝트 타겟 일정 -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" style="font-size:13px">이슈 관리 등록 현황</div>
+            <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="goPage('issue',document.querySelectorAll('.ni')[3])">+ 이슈 등록</button>
+          </div>
+          <div style="padding:10px 0" id="dashIssueList">
+            <div class="empty">등록된 이슈가 없습니다</div>
+          </div>
         </div>
-        <div style="padding:10px 0" id="dashIssueList">
-          <div class="empty">등록된 이슈가 없습니다</div>
+        <!-- 신규 프로젝트 타겟 일정 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" style="font-size:13px">신규 프로젝트 타겟 일정</div>
+            <button class="add-btn" style="font-size:10px;padding:3px 10px" onclick="toggleTargetForm()">+ 추가</button>
+          </div>
+          <div class="add-form" id="targetForm">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;padding:2px 0">
+              <div class="fg"><label>프로젝트명</label><input id="tg-name" placeholder="예: HDS V2.0 양산"></div>
+              <div class="fg"><label>타겟 일정</label><input id="tg-date" type="date"></div>
+              <div class="fg"><label>담당자</label><input id="tg-owner" placeholder="홍길동"></div>
+              <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveTarget()">추가</button><button class="cancel-btn" onclick="toggleTargetForm()">취소</button></div></div>
+            </div>
+          </div>
+          <div id="targetList" style="padding:0"></div>
         </div>
       </div>
     </div>
@@ -1244,6 +1262,7 @@ function renderDashboard(){
   renderDashAS();
   renderDashBom();
   renderSwReleaseList();
+  renderTargets();
 }
 
 // 1. 프로젝트 리스트
@@ -1327,6 +1346,47 @@ function renderDashBom(){
 
 // 5. SW Release
 let swReleases=[];
+// 신규 프로젝트 타겟 일정
+let targets=[];
+function toggleTargetForm(){document.getElementById('targetForm').classList.toggle('open');}
+function saveTarget(){
+  const name=document.getElementById('tg-name').value.trim();
+  const date=document.getElementById('tg-date').value;
+  if(!name){alert('프로젝트명을 입력해주세요');return;}
+  const t={id:'tg'+Date.now(),name,date,owner:document.getElementById('tg-owner').value.trim()};
+  targets.push(t);
+  if(dbRef)dbRef.child('targets/'+t.id).set(t);
+  document.getElementById('tg-name').value='';
+  document.getElementById('tg-owner').value='';
+  document.getElementById('targetForm').classList.remove('open');
+  renderTargets();
+}
+function deleteTarget(id){
+  if(!confirm('삭제하시겠습니까?'))return;
+  targets=targets.filter(t=>t.id!==id);
+  if(dbRef)dbRef.child('targets/'+id).remove();
+  renderTargets();
+}
+function renderTargets(){
+  const el=document.getElementById('targetList');
+  if(!el)return;
+  if(!targets.length){el.innerHTML=`<div class="empty" style="padding:14px">등록된 일정이 없습니다</div>`;return;}
+  const today=new Date();
+  el.innerHTML=targets.map(t=>{
+    const diff=t.date?Math.ceil((new Date(t.date)-today)/(1000*60*60*24)):null;
+    const dLabel=diff===null?'-':diff<0?`D+${Math.abs(diff)}`:diff===0?'D-DAY':`D-${diff}`;
+    const dColor=diff===null?'var(--text3)':diff<0?'var(--red)':diff<=7?'var(--yellow)':'var(--green)';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid var(--border)">
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500;color:var(--text)">${t.name}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">${t.date||'일정 미정'}${t.owner?' · '+t.owner:''}</div>
+      </div>
+      <span style="font-family:var(--font-d);font-size:13px;font-weight:700;color:${dColor};min-width:52px;text-align:right">${dLabel}</span>
+      <button class="act-btn del" style="font-size:9px;padding:2px 7px" onclick="deleteTarget('${t.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
 function toggleSwForm(){document.getElementById('swForm').classList.toggle('open');}
 function saveSwRelease(){
   const model=document.getElementById('sw-model').value.trim();
@@ -1714,6 +1774,11 @@ function initFirebase(){
           const data=snap.val();
           inoutItems=data?Object.values(data).filter(i=>i&&i.id):[];
           renderInout();
+        });
+        dbRef.child('targets').on('value',snap=>{
+          const data=snap.val();
+          targets=data?Object.values(data).filter(t=>t&&t.id):[];
+          renderTargets();
         });
         dbRef.child('swReleases').on('value',snap=>{
           const data=snap.val();
