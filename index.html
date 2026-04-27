@@ -474,7 +474,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
       <div class="kpi blue"><div class="kpi-label">A/S 접수</div><div class="kpi-num" id="as-total">00</div><div class="kpi-sub">전체 접수 건수</div></div>
       <div class="kpi yellow"><div class="kpi-label">처리 중</div><div class="kpi-num" id="as-prog">00</div><div class="kpi-sub">처리 진행 중</div></div>
       <div class="kpi green"><div class="kpi-label">처리 완료</div><div class="kpi-num" id="as-done">00</div><div class="kpi-sub">완료 건수</div></div>
-      <div class="kpi red"><div class="kpi-label">RMA</div><div class="kpi-num" id="as-rma">00</div><div class="kpi-sub">반품/교환 건수</div></div>
+      <div class="kpi red"><div class="kpi-label">기타</div><div class="kpi-num" id="as-rma">00</div><div class="kpi-sub">기타 건수</div></div>
     </div>
     <div class="card">
       <div class="card-header">
@@ -482,20 +482,50 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
         <button class="add-btn" onclick="toggleAsForm()">+ A/S 등록</button>
       </div>
       <div class="add-form" id="asForm">
-        <div class="issue-form-grid">
-          <div class="fg"><label>고객사/제품</label><input id="as-customer" placeholder="예: HMC / RV-R3008"></div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1.5fr 1fr 1fr 1fr 1fr auto;gap:8px;align-items:end;padding:2px 0">
+          <div class="fg"><label>고객사/A/S번호/RMA번호</label><input id="as-customer" placeholder="예: HMC / AS-2024-001"></div>
+          <div class="fg"><label>제품</label><input id="as-product" placeholder="예: RV-R3008"></div>
           <div class="fg"><label>증상</label><input id="as-symptom" placeholder="증상 입력"></div>
-          <div class="fg"><label>유형</label><select id="as-type"><option value="유상">유상</option><option value="무상">무상</option><option value="RMA">RMA</option></select></div>
+          <div class="fg"><label>유형</label><select id="as-type" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="유상">유상</option><option value="무상">무상</option><option value="기타">기타</option></select></div>
+          <div class="fg"><label>분류</label><select id="as-category" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="HW">HW</option><option value="SW">SW</option><option value="기구">기구</option><option value="기타">기타</option></select></div>
           <div class="fg"><label>담당자</label><input id="as-owner" placeholder="홍길동"></div>
+          <div class="fg"><label>접수일</label><input id="as-date-input" type="date"></div>
           <div class="fg"><label>&nbsp;</label><div><button class="save-btn" onclick="saveAs()">등록</button><button class="cancel-btn" onclick="toggleAsForm()">취소</button></div></div>
         </div>
+        <div style="margin-top:8px">
+          <div class="fg"><label>메모</label><input id="as-memo" placeholder="메모 입력 (선택)" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+        </div>
+      </div>
+      <!-- A/S 필터 -->
+      <div style="padding:10px 18px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);align-items:center">
+        <select id="as-filter-customer" style="padding:4px 8px;font-size:12px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none;min-width:110px" onchange="renderAs()">
+          <option value="">고객사 전체</option>
+        </select>
+        <select id="as-filter-product" style="padding:4px 8px;font-size:12px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none;min-width:110px" onchange="renderAs()">
+          <option value="">제품 전체</option>
+        </select>
+        <select id="as-filter-type" style="padding:4px 8px;font-size:12px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none" onchange="renderAs()">
+          <option value="">유형 전체</option><option value="유상">유상</option><option value="무상">무상</option><option value="기타">기타</option>
+        </select>
+        <select id="as-filter-status" style="padding:4px 8px;font-size:12px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none" onchange="renderAs()">
+          <option value="">상태 전체</option><option value="접수">접수</option><option value="처리중">처리중</option><option value="완료">완료</option>
+        </select>
+        <input id="as-filter-text" placeholder="🔍 증상 검색..." style="padding:4px 10px;font-size:12px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none;width:130px" oninput="renderAs()">
       </div>
       <table class="issue-table">
         <thead><tr>
-          <th style="width:40px">NO</th><th>고객사/제품</th>
-          <th style="width:150px">증상</th><th style="width:70px">유형</th>
-          <th style="width:70px">상태</th><th style="width:80px">담당자</th>
-          <th style="width:110px">접수일</th><th style="width:120px">첨부파일</th><th style="width:80px">관리</th>
+          <th style="width:36px">NO</th>
+          <th style="width:110px">고객사</th>
+          <th style="width:100px">제품</th>
+          <th style="width:150px">증상</th>
+          <th style="width:55px">유형</th>
+          <th style="width:60px">상태</th>
+          <th style="width:65px">담당자</th>
+          <th style="width:85px">접수일</th>
+          <th style="width:100px">첨부파일</th>
+          <th style="width:130px">메모</th>
+          <th style="width:50px">완료</th>
+          <th style="width:85px">관리</th>
         </tr></thead>
         <tbody id="asTbody"></tbody>
       </table>
@@ -626,6 +656,83 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
   <div style="display:flex;justify-content:flex-end;gap:8px"><button class="cancel-btn" onclick="closeAsFile()">취소</button><button class="save-btn" onclick="saveAsFile()">추가</button></div>
 </div>
 <div id="asFileOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998" onclick="closeAsFile()"></div>
+
+<!-- A/S 수정 모달 -->
+<div id="asEditForm" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:24px;z-index:999;min-width:520px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <input type="hidden" id="ase-id">
+  <div style="font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)">A/S 정보 수정</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="fg"><label>고객사/A/S번호/RMA번호</label><input id="ase-customer" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>제품</label><input id="ase-product" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>증상</label><input id="ase-symptom" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>유형</label><select id="ase-type" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="유상">유상</option><option value="무상">무상</option><option value="기타">기타</option></select></div>
+    <div class="fg"><label>분류</label><select id="ase-category" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="HW">HW</option><option value="SW">SW</option><option value="기구">기구</option><option value="기타">기타</option></select></div>
+    <div class="fg"><label>담당자</label><input id="ase-owner" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>접수일</label><input id="ase-date" type="date" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>메모</label><input id="ase-memo" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+    <button class="cancel-btn" onclick="closeAsEdit()">취소</button>
+    <button class="save-btn" onclick="saveAsEdit()">저장</button>
+  </div>
+</div>
+<div id="asEditOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998" onclick="closeAsEdit()"></div>
+
+<!-- 프로젝트 수정 모달 -->
+<div id="projEditForm" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:24px;z-index:999;min-width:480px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <input type="hidden" id="pe-id">
+  <div style="font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)">프로젝트 정보 수정</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="fg" style="grid-column:1/-1"><label>프로젝트명</label><input id="pe-name" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>유형</label><select id="pe-type" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="4M변경">4M변경</option><option value="신규개발">신규개발/양산이관</option><option value="납품검사">납품검사/수입검사</option></select></div>
+    <div class="fg"><label>단계</label><select id="pe-step" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option>EP 1</option><option>EP 2</option><option>MP READY</option><option>양산</option><option>수입검사</option><option>납품검사</option></select></div>
+    <div class="fg"><label>담당자</label><input id="pe-owner" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>목표일</label><input id="pe-due" type="date" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>상태</label><select id="pe-status" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option>진행중</option><option>대기</option><option>지연</option><option>정상</option><option>완료</option></select></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+    <button class="cancel-btn" onclick="closeProjEdit()">취소</button>
+    <button class="save-btn" onclick="saveProjEdit()">저장</button>
+  </div>
+</div>
+<div id="projEditOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998" onclick="closeProjEdit()"></div>
+
+<!-- 이슈 수정 모달 -->
+<div id="issueEditForm" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:24px;z-index:999;min-width:480px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <input type="hidden" id="ie-id">
+  <div style="font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)">이슈 정보 수정</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="fg" style="grid-column:1/-1"><label>이슈 내용</label><input id="ie-title" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>심각도</label><select id="ie-level" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="긴급">🔴 긴급</option><option value="일반">🟡 일반</option><option value="개선">🔵 개선</option></select></div>
+    <div class="fg"><label>담당자</label><input id="ie-owner" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>상태</label><select id="ie-status" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option>오픈</option><option>처리중</option><option>완료</option></select></div>
+    <div class="fg" style="grid-column:1/-1"><label>진행사항</label><input id="ie-progress" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+    <button class="cancel-btn" onclick="closeIssueEdit()">취소</button>
+    <button class="save-btn" onclick="saveIssueEdit()">저장</button>
+  </div>
+</div>
+<div id="issueEditOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998" onclick="closeIssueEdit()"></div>
+
+<!-- 입출고 수정 모달 -->
+<div id="inoutEditForm" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:24px;z-index:999;min-width:480px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <input type="hidden" id="ioe-id">
+  <div style="font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text)">입출고 정보 수정</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div class="fg" style="grid-column:1/-1"><label>자재명/모델</label><input id="ioe-name" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>수량</label><input id="ioe-qty" type="number" min="1" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>구분</label><select id="ioe-type" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"><option value="입고">입고</option><option value="출고">출고</option><option value="반납">반납</option></select></div>
+    <div class="fg"><label>담당자</label><input id="ioe-owner" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg"><label>일자</label><input id="ioe-date" type="date" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+    <div class="fg" style="grid-column:1/-1"><label>비고</label><input id="ioe-note" style="width:100%;padding:7px 9px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-b);outline:none"></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+    <button class="cancel-btn" onclick="closeInoutEdit()">취소</button>
+    <button class="save-btn" onclick="saveInoutEdit()">저장</button>
+  </div>
+</div>
+<div id="inoutEditOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998" onclick="closeInoutEdit()"></div>
 
 <!-- BOM 링크 폼 -->
 <div id="bomLinkForm" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:20px;z-index:999;min-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
@@ -805,6 +912,7 @@ function renderProjTable(){
         </div>
       </div></td>
       <td><div class="pc"><div class="row-actions">
+        <button class="act-btn edit" onclick="openProjEdit('${p.id}',event)">수정</button>
         <button class="act-btn del" onclick="deleteProject('${p.id}',event)">삭제</button>
       </div></div></td>
     </tr>`;
@@ -922,7 +1030,10 @@ function renderIssues(){
       <td><div class="pc"><input value="${iss.progress||''}" placeholder="진행사항 입력..." style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-size:11px;font-family:var(--font-b);outline:none;padding:2px 0" onchange="changeIssueProgress('${iss.id}',this.value)"></div></td>
       <td><div class="pc" style="font-size:12px">${iss.owner||'-'}</div></td>
       <td><div class="pc" style="font-size:11px;color:var(--text3)">${iss.date||'-'}</div></td>
-      <td><div class="pc"><button class="act-btn del" onclick="deleteIssue('${iss.id}')">삭제</button></div></td>
+      <td><div class="pc"><div style="display:flex;gap:4px">
+        <button class="act-btn edit" onclick="openIssueEdit('${iss.id}')">수정</button>
+        <button class="act-btn del" onclick="deleteIssue('${iss.id}')">삭제</button>
+      </div></div></td>
     </tr>`;
   }).join('');
 }
@@ -976,34 +1087,78 @@ function renderSheets(){
 // A/S
 function renderAs(){
   const total=asItems.length, prog=asItems.filter(a=>a.status==='처리중').length;
-  const done=asItems.filter(a=>a.status==='완료').length, rma=asItems.filter(a=>a.type==='RMA').length;
+  const done=asItems.filter(a=>a.status==='완료').length, rma=asItems.filter(a=>a.type==='기타').length;
   document.getElementById('as-total').textContent=String(total).padStart(2,'0');
   document.getElementById('as-prog').textContent=String(prog).padStart(2,'0');
   document.getElementById('as-done').textContent=String(done).padStart(2,'0');
   document.getElementById('as-rma').textContent=String(rma).padStart(2,'0');
+  renderDashAS();
+
   const tb=document.getElementById('asTbody');
-  if(!asItems.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty">등록된 A/S 건이 없습니다.</div></td></tr>`;return;}
-  const typeColor={'유상':'b-wait','무상':'b-prog','RMA':'b-delay'};
-  tb.innerHTML=asItems.map((a,i)=>`<tr class="issue-row">
+  if(!tb)return;
+
+  // 고객사/제품 드롭다운 동적 업데이트
+  const cSel=document.getElementById('as-filter-customer');
+  const pSel=document.getElementById('as-filter-product');
+  if(cSel&&pSel){
+    const selC=cSel.value, selP=pSel.value;
+    const customers=[...new Set(asItems.map(a=>a.customer).filter(Boolean))].sort();
+    const products=[...new Set(asItems.map(a=>a.product).filter(Boolean))].sort();
+    cSel.innerHTML='<option value="">고객사 전체</option>'+customers.map(c=>`<option value="${c}"${c===selC?' selected':''}>${c}</option>`).join('');
+    pSel.innerHTML='<option value="">제품 전체</option>'+products.map(p=>`<option value="${p}"${p===selP?' selected':''}>${p}</option>`).join('');
+  }
+
+  // 필터
+  const fCustomer=document.getElementById('as-filter-customer')?.value||'';
+  const fProduct=document.getElementById('as-filter-product')?.value||'';
+  const fText=(document.getElementById('as-filter-text')?.value||'').toLowerCase();
+  const fType=document.getElementById('as-filter-type')?.value||'';
+  const fStatus=document.getElementById('as-filter-status')?.value||'';
+
+  let list=[...asItems];
+  if(fCustomer) list=list.filter(a=>a.customer===fCustomer);
+  if(fProduct) list=list.filter(a=>a.product===fProduct);
+  if(fText) list=list.filter(a=>(a.symptom||'').toLowerCase().includes(fText));
+  if(fType) list=list.filter(a=>a.type===fType);
+  if(fStatus) list=list.filter(a=>a.status===fStatus);
+
+  if(!list.length){tb.innerHTML=`<tr><td colspan="12"><div class="empty">등록된 A/S 건이 없습니다.</div></td></tr>`;return;}
+  const typeColor={'유상':'b-wait','무상':'b-prog','기타':'b-delay'};
+
+  tb.innerHTML=list.map((a,i)=>{
+    const isDone=a.status==='완료';
+    const lineThrough=isDone?'text-decoration:line-through;color:var(--text3);':'';
+    return `<tr class="issue-row" style="${isDone?'opacity:.7':''}">
     <td><div class="pc pno">${String(i+1).padStart(2,'0')}</div></td>
-    <td><div class="pc" style="font-size:12px">${a.customer}</div></td>
-    <td><div class="pc" style="font-size:11px;color:var(--text2)">${a.symptom}</div></td>
+    <td><div class="pc" style="font-size:11px;font-weight:500;${lineThrough}">${a.customer||'-'}</div></td>
+    <td><div class="pc" style="font-size:11px;${lineThrough}">${a.product||'-'}</div></td>
+    <td><div class="pc" style="font-size:11px;${lineThrough}">${a.symptom||'-'}</div></td>
     <td><div class="pc"><span class="badge ${typeColor[a.type]||'b-wait'}">${a.type}</span></div></td>
-    <td><div class="pc"><select style="background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:2px 6px;font-family:var(--font-b)" onchange="changeAsStatus('${a.id}',this.value)"><option${a.status==='접수'?' selected':''}>접수</option><option${a.status==='처리중'?' selected':''}>처리중</option><option${a.status==='완료'?' selected':''}>완료</option></select></div></td>
-    <td><div class="pc" style="font-size:12px">${a.owner||'-'}</div></td>
-    <td><div class="pc" style="font-size:11px;color:var(--text3)">${a.date||'-'}</div></td>
+    <td><div class="pc"><select style="background:var(--bg4);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:2px 4px;font-family:var(--font-b);width:100%" onchange="changeAsStatus('${a.id}',this.value)"><option${a.status==='접수'?' selected':''}>접수</option><option${a.status==='처리중'?' selected':''}>처리중</option><option${a.status==='완료'?' selected':''}>완료</option></select></div></td>
+    <td><div class="pc" style="font-size:11px">${a.owner||'-'}</div></td>
+    <td><div class="pc" style="font-size:10px;color:var(--text3)">${a.date||'-'}</div></td>
     <td><div class="pc">
       <div style="display:flex;flex-direction:column;gap:3px">
         ${(a.files||[]).map((f,fi)=>`<div style="display:flex;align-items:center;gap:4px">
-          <a href="${f.url}" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</a>
-          <button class="act-btn" style="padding:1px 5px;font-size:9px" onclick="removeAsFile('${a.id}',${fi})">✕</button>
+          <a href="${f.url}" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</a>
+          <button class="act-btn" style="padding:1px 4px;font-size:9px" onclick="removeAsFile('${a.id}',${fi})">✕</button>
         </div>`).join('')}
-        <button class="act-btn edit" style="font-size:10px;padding:2px 7px" onclick="openAsFile('${a.id}')">+ 파일추가</button>
+        <button class="act-btn edit" style="font-size:9px;padding:2px 6px" onclick="openAsFile('${a.id}')">+ 파일</button>
       </div>
     </div></td>
-    <td><div class="pc"><button class="act-btn del" onclick="deleteAs('${a.id}')">삭제</button></div></td>
-  </tr>`).join('');
+    <td><div class="pc">
+      <input value="${a.memo||''}" placeholder="메모 입력..." style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-size:11px;font-family:var(--font-b);outline:none;padding:2px 0" onchange="changeAsMemo('${a.id}',this.value)">
+    </div></td>
+    <td><div class="pc" style="text-align:center">
+      <input type="checkbox" ${isDone?'checked':''} style="width:16px;height:16px;cursor:pointer;accent-color:var(--green)" onchange="changeAsStatus('${a.id}',this.checked?'완료':'처리중')">
+    </div></td>
+    <td><div class="pc"><div style="display:flex;gap:4px;flex-wrap:wrap">
+      <button class="act-btn edit" style="font-size:10px;padding:2px 7px" onclick="openAsEdit('${a.id}')">수정</button>
+      <button class="act-btn del" style="font-size:10px;padding:2px 7px" onclick="deleteAs('${a.id}')">삭제</button>
+    </div></div></td>
+  </tr>`;}).join('');
 }
+
 
 // CHECKLIST
 function renderChecklist(){
@@ -1313,7 +1468,7 @@ function renderDashAS(){
   const t=document.getElementById('dash-as-total');
   if(!t)return;
   const total=asItems.length;
-  const rma=asItems.filter(a=>a.type==='RMA').length;
+  const rma=asItems.filter(a=>a.type==='기타').length;
   const done=asItems.filter(a=>a.status==='완료').length;
   t.textContent=String(total).padStart(2,'0');
   document.getElementById('dash-rma-total').textContent=String(rma).padStart(2,'0');
@@ -1322,7 +1477,7 @@ function renderDashAS(){
   if(!recent)return;
   const list=asItems.slice().reverse().slice(0,4);
   if(!list.length){recent.innerHTML=`<div style="font-size:11px;color:var(--text3);text-align:center;padding:12px">등록된 A/S 내역이 없습니다</div>`;return;}
-  const typeColor={'유상':'b-wait','무상':'b-prog','RMA':'b-delay'};
+  const typeColor={'유상':'b-wait','무상':'b-prog','기타':'b-delay'};
   recent.innerHTML=`<div style="display:flex;flex-direction:column;gap:4px">${list.map(a=>`
     <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="goPage('as',document.querySelectorAll('.ni')[4])">
       <span class="badge ${typeColor[a.type]||'b-wait'}" style="flex-shrink:0">${a.type}</span>
@@ -1590,12 +1745,63 @@ function changeIssueProgress(id,val){
 // SAVE A/S
 function saveAs(){
   const customer=document.getElementById('as-customer').value.trim();
-  if(!customer){alert('고객사/제품을 입력해주세요');return;}
-  const a={id:'a'+Date.now(),customer,symptom:document.getElementById('as-symptom').value.trim(),type:document.getElementById('as-type').value,owner:document.getElementById('as-owner').value.trim(),status:'접수',date:today()};
+  if(!customer){alert('고객사/번호를 입력해주세요');return;}
+  const dateVal=document.getElementById('as-date-input').value||today();
+  const a={
+    id:'a'+Date.now(),
+    customer,
+    product:document.getElementById('as-product').value.trim(),
+    symptom:document.getElementById('as-symptom').value.trim(),
+    type:document.getElementById('as-type').value,
+    category:document.getElementById('as-category').value,
+    owner:document.getElementById('as-owner').value.trim(),
+    memo:document.getElementById('as-memo').value.trim(),
+    status:'접수',
+    date:dateVal,
+    files:[]
+  };
   asItems.push(a);
   if(dbRef)dbRef.child('as/'+a.id).set(a);
-  document.getElementById('as-customer').value='';document.getElementById('as-symptom').value='';document.getElementById('as-owner').value='';
+  ['as-customer','as-product','as-symptom','as-owner','as-memo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('as-date-input').value='';
   document.getElementById('asForm').classList.remove('open');
+  renderAs();
+}
+
+// A/S 수정 모달 열기
+function openAsEdit(id){
+  const a=asItems.find(x=>x.id===id);
+  if(!a)return;
+  document.getElementById('ase-customer').value=a.customer||'';
+  document.getElementById('ase-product').value=a.product||'';
+  document.getElementById('ase-symptom').value=a.symptom||'';
+  document.getElementById('ase-type').value=a.type||'유상';
+  document.getElementById('ase-category').value=a.category||'HW';
+  document.getElementById('ase-owner').value=a.owner||'';
+  document.getElementById('ase-date').value=a.date||'';
+  document.getElementById('ase-memo').value=a.memo||'';
+  document.getElementById('ase-id').value=id;
+  document.getElementById('asEditForm').style.display='block';
+  document.getElementById('asEditOverlay').style.display='block';
+}
+function closeAsEdit(){
+  document.getElementById('asEditForm').style.display='none';
+  document.getElementById('asEditOverlay').style.display='none';
+}
+function saveAsEdit(){
+  const id=document.getElementById('ase-id').value;
+  const a=asItems.find(x=>x.id===id);
+  if(!a)return;
+  a.customer=document.getElementById('ase-customer').value.trim();
+  a.product=document.getElementById('ase-product').value.trim();
+  a.symptom=document.getElementById('ase-symptom').value.trim();
+  a.type=document.getElementById('ase-type').value;
+  a.category=document.getElementById('ase-category').value;
+  a.owner=document.getElementById('ase-owner').value.trim();
+  a.date=document.getElementById('ase-date').value;
+  a.memo=document.getElementById('ase-memo').value.trim();
+  if(dbRef)dbRef.child('as/'+id).update({customer:a.customer,product:a.product,symptom:a.symptom,type:a.type,category:a.category,owner:a.owner,date:a.date,memo:a.memo});
+  closeAsEdit();
   renderAs();
 }
 function deleteAs(id){
@@ -1636,6 +1842,11 @@ function removeAsFile(aid,fi){
   renderAs();
 }
 
+function changeAsMemo(id,val){
+  const a=asItems.find(x=>x.id===id);if(!a)return;
+  a.memo=val;
+  if(dbRef)dbRef.child('as/'+id+'/memo').set(val);
+}
 function changeAsStatus(id,val){
   const a=asItems.find(x=>x.id===id);if(!a)return;
   a.status=val;
@@ -1720,7 +1931,10 @@ function renderInout(){
       <td><div class="pc" style="font-size:12px">${item.owner||'-'}</div></td>
       <td><div class="pc" style="font-size:11px;color:var(--text3)">${item.date||'-'}</div></td>
       <td><div class="pc" style="font-size:11px;color:var(--text3)">${item.note||'-'}</div></td>
-      <td><div class="pc"><button class="act-btn del" style="font-size:10px;padding:2px 8px" onclick="deleteInout('${item.id}')">삭제</button></div></td>
+      <td><div class="pc"><div style="display:flex;gap:4px">
+        <button class="act-btn edit" style="font-size:10px;padding:2px 7px" onclick="openInoutEdit('${item.id}')">수정</button>
+        <button class="act-btn del" style="font-size:10px;padding:2px 7px" onclick="deleteInout('${item.id}')">삭제</button>
+      </div></div></td>
     </tr>`;
   }).join('');
 }
@@ -1795,6 +2009,99 @@ function initFirebase(){
     document.head.appendChild(s2);
   };
   document.head.appendChild(s1);
+}
+
+// 프로젝트 수정
+function openProjEdit(id,e){
+  if(e)e.stopPropagation();
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  document.getElementById('pe-id').value=id;
+  document.getElementById('pe-name').value=p.name||'';
+  document.getElementById('pe-type').value=p.type||'4M변경';
+  document.getElementById('pe-step').value=p.step||'EP 1';
+  document.getElementById('pe-owner').value=p.owner||'';
+  document.getElementById('pe-due').value=p.due||'';
+  document.getElementById('pe-status').value=p.status||'진행중';
+  document.getElementById('projEditForm').style.display='block';
+  document.getElementById('projEditOverlay').style.display='block';
+}
+function closeProjEdit(){
+  document.getElementById('projEditForm').style.display='none';
+  document.getElementById('projEditOverlay').style.display='none';
+}
+function saveProjEdit(){
+  const id=document.getElementById('pe-id').value;
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  p.name=document.getElementById('pe-name').value.trim();
+  p.type=document.getElementById('pe-type').value;
+  p.step=document.getElementById('pe-step').value;
+  p.owner=document.getElementById('pe-owner').value.trim();
+  p.due=document.getElementById('pe-due').value;
+  p.status=document.getElementById('pe-status').value;
+  if(dbRef)dbRef.child('projects/'+id).update({name:p.name,type:p.type,step:p.step,owner:p.owner,due:p.due,status:p.status});
+  closeProjEdit();
+  render();
+}
+
+// 이슈 수정
+function openIssueEdit(id){
+  const iss=issues.find(x=>x.id===id);if(!iss)return;
+  document.getElementById('ie-id').value=id;
+  document.getElementById('ie-title').value=iss.title||'';
+  document.getElementById('ie-level').value=iss.level||'일반';
+  document.getElementById('ie-owner').value=iss.owner||'';
+  document.getElementById('ie-status').value=iss.status||'오픈';
+  document.getElementById('ie-progress').value=iss.progress||'';
+  document.getElementById('issueEditForm').style.display='block';
+  document.getElementById('issueEditOverlay').style.display='block';
+}
+function closeIssueEdit(){
+  document.getElementById('issueEditForm').style.display='none';
+  document.getElementById('issueEditOverlay').style.display='none';
+}
+function saveIssueEdit(){
+  const id=document.getElementById('ie-id').value;
+  const iss=issues.find(x=>x.id===id);if(!iss)return;
+  iss.title=document.getElementById('ie-title').value.trim();
+  iss.level=document.getElementById('ie-level').value;
+  iss.owner=document.getElementById('ie-owner').value.trim();
+  iss.status=document.getElementById('ie-status').value;
+  iss.progress=document.getElementById('ie-progress').value.trim();
+  if(dbRef)dbRef.child('issues/'+id).update({title:iss.title,level:iss.level,owner:iss.owner,status:iss.status,progress:iss.progress});
+  closeIssueEdit();
+  renderIssues();
+  renderDashIssues();
+}
+
+// 입출고 수정
+function openInoutEdit(id){
+  const item=inoutItems.find(x=>x.id===id);if(!item)return;
+  document.getElementById('ioe-id').value=id;
+  document.getElementById('ioe-name').value=item.name||'';
+  document.getElementById('ioe-qty').value=item.qty||1;
+  document.getElementById('ioe-type').value=item.type||'입고';
+  document.getElementById('ioe-owner').value=item.owner||'';
+  document.getElementById('ioe-date').value=item.date||'';
+  document.getElementById('ioe-note').value=item.note||'';
+  document.getElementById('inoutEditForm').style.display='block';
+  document.getElementById('inoutEditOverlay').style.display='block';
+}
+function closeInoutEdit(){
+  document.getElementById('inoutEditForm').style.display='none';
+  document.getElementById('inoutEditOverlay').style.display='none';
+}
+function saveInoutEdit(){
+  const id=document.getElementById('ioe-id').value;
+  const item=inoutItems.find(x=>x.id===id);if(!item)return;
+  item.name=document.getElementById('ioe-name').value.trim();
+  item.qty=parseInt(document.getElementById('ioe-qty').value)||1;
+  item.type=document.getElementById('ioe-type').value;
+  item.owner=document.getElementById('ioe-owner').value.trim();
+  item.date=document.getElementById('ioe-date').value;
+  item.note=document.getElementById('ioe-note').value.trim();
+  if(dbRef)dbRef.child('inout/'+id).update({name:item.name,qty:item.qty,type:item.type,owner:item.owner,date:item.date,note:item.note});
+  closeInoutEdit();
+  renderInout();
 }
 
 render();
