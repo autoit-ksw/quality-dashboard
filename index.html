@@ -749,15 +749,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height
 <script>
 // LOGIN
 const USERS = [
-  {id:'autoit-qc&si',pw:'000000',name:'김승원 부장',role:'품질운영 총괄'},
-  {id:'mysh2004',pw:'000000',name:'김상훈 사원',role:'품질팀'},
-  {id:'swy7770',pw:'000000',name:'심원용 과장',role:'품질팀'},
-  {id:'naneenws',pw:'000000',name:'장원식 사원',role:'품질팀'},
-  {id:'jmk0308',pw:'000000',name:'장명균 차장',role:'SI팀'},
-  {id:'dh9873',pw:'000000',name:'황인호 대리',role:'SI팀'},
-  {id:'ais9978',pw:'000000',name:'이상민 사원',role:'SI팀'},
-  {id:'anwls0108',pw:'000000',name:'심무진 사원',role:'SI팀'},
-  {id:'woong3104',pw:'000000',name:'김준웅 사원',role:'SI팀'}
+  {id:'autoit-qc&si',pw:'000000',name:'김승원 부장',role:'품질운영 총괄',access:'all'},
+  {id:'mysh2004',pw:'000000',name:'김상훈 사원',role:'품질팀',access:'all'},
+  {id:'swy7770',pw:'000000',name:'심원용 과장',role:'품질팀',access:'all'},
+  {id:'naneenws',pw:'000000',name:'장원식 사원',role:'품질팀',access:'all'},
+  {id:'jmk0308',pw:'000000',name:'장명균 차장',role:'SI팀',access:'all'},
+  {id:'dh9873',pw:'000000',name:'황인호 대리',role:'SI팀',access:'all'},
+  {id:'ais9978',pw:'000000',name:'이상민 사원',role:'SI팀',access:'all'},
+  {id:'anwls0108',pw:'000000',name:'심무진 사원',role:'SI팀',access:'all'},
+  {id:'woong3104',pw:'000000',name:'김준웅 사원',role:'SI팀',access:'all'},
+  {id:'user1',pw:'000000',name:'생산팀',role:'생산팀',access:'bom'}
 ];
 function doLogin(){
   const id=document.getElementById('login-id').value.trim();
@@ -776,6 +777,29 @@ function doLogin(){
   document.getElementById('loginScreen').style.display='none';
   document.querySelector('.u-name').textContent=user.name;
   document.querySelector('.u-role').textContent=user.role;
+  applyAccess(user.access||'all');
+}
+
+function applyAccess(access){
+  if(access==='all') return;
+  if(access==='bom'){
+    // 사이드바 메뉴 - BOM만 표시
+    const navItems=document.querySelectorAll('.ni');
+    const allowedIdx=[6]; // BOM/자료실 인덱스
+    navItems.forEach((el,i)=>{
+      if(!allowedIdx.includes(i)) el.style.display='none';
+    });
+    // 모든 page 숨기고 BOM 페이지만 표시
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const bomPage=document.getElementById('page-bom');
+    if(bomPage) bomPage.classList.add('active');
+    // 상단 타이틀 변경
+    document.getElementById('pageTitle').textContent='BOM / 자료실';
+    // 검색창 숨김
+    const sw=document.querySelector('.search-wrap');
+    if(sw) sw.style.display='none';
+    renderBom();
+  }
 }
 
 
